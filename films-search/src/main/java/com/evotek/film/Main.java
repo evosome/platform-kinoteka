@@ -1,4 +1,4 @@
-package com.evotek.kinoteka;
+package com.evotek.film;
 
 public class Main {
     public static void main(String[] args) {
