@@ -25,9 +25,6 @@ public class MovieUser {
     private List<Ticket> moviesWatched = new ArrayList<>();
     @OneToMany(mappedBy = "movieUserFk",cascade = CascadeType.ALL,orphanRemoval = true)
     private List<Feedback> feedbacks = new ArrayList<>();
-    @OneToOne
-    @JsonIgnore
-    private BrowsingHistory browsingHistory;
     public void addSession(Ticket session) {
         moviesWatched.add(session);
         session.setTicketFk(this);
