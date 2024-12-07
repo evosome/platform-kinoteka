@@ -18,6 +18,7 @@
         <module>sessions-service</module>
         <module>feedback-service</module>
         <module>kafka-service</module>
+        <module>common</module>
     </modules>
 
 

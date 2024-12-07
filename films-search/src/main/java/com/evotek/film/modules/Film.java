@@ -1,7 +1,7 @@
 package com.evotek.film.modules;
 
-import com.evotek.feedback.modules.Feedback;
-import com.evotek.service.modules.Session;
+import com.evotek.common.modules.Feedback;
+import com.evotek.common.modules.Session;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;

@@ -1,7 +1,7 @@
 package com.evotek.user.modules;
 
-import com.evotek.feedback.modules.Feedback;
-import com.evotek.kinoteka.modules.Ticket;
+import com.evotek.common.modules.Feedback;
+import com.evotek.common.modules.Ticket;
 import lombok.Getter;
 import lombok.Setter;
 

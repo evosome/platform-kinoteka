@@ -1,4 +1,6 @@
 package com.evotek.feedback.modules;
+import com.evotek.common.modules.Film;
+import com.evotek.common.modules.MovieUser;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;

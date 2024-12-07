@@ -1,5 +1,8 @@
 package com.evotek.service.modules;
 
+import com.evotek.common.modules.Film;
+import com.evotek.common.modules.Halls;
+import com.evotek.common.modules.Ticket;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
@@ -12,7 +15,7 @@ import java.util.List;
 @Setter
 @Entity
 @Table(name = "Session")
-public class Session {
+public class Session{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long sessionId;

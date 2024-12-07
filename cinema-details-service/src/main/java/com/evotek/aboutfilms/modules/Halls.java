@@ -1,6 +1,6 @@
 package com.evotek.aboutfilms.modules;
 
-import com.evotek.service.modules.Session;
+import com.evotek.common.modules.Session;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
@@ -13,7 +13,7 @@ import java.util.List;
 @Setter
 @Entity
 @Table(name = "Halls")
-public class Halls {
+public class Halls extends com.evotek.common.modules.Halls {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long hallsId;

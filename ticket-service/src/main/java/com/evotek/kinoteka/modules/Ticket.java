@@ -1,5 +1,7 @@
 package com.evotek.kinoteka.modules;
 
+import com.evotek.common.modules.MovieUser;
+import com.evotek.common.modules.Session;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
