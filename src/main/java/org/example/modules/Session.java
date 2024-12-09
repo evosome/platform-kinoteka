@@ -30,8 +30,4 @@ public class Session {
         tickets.add(ticket);
         ticket.setTicket(this);
     }
-
-    public void removeSession(Ticket cinemaSessionById) {
-
-    }
 }

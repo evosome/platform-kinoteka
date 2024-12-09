@@ -24,4 +24,5 @@ public class FeedbackService {
     public Feedback getFeedbackById(long feedbackId) {
         return feedbackRepository.findById(feedbackId).orElseThrow(() -> new EntityNotFoundException("Producer not found with id: " + feedbackId));
     }
+    public void deleteFeedbackById(long feedbackId) {feedbackRepository.deleteById(feedbackId); }
 }

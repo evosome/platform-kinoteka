@@ -60,6 +60,21 @@ public class MovieUserController {
             return ResponseEntity.badRequest().body("Длина пароля или логина должна быть от 4 до 12 символов");
         }
     }
+    @Operation(summary = "Delete user by id", tags = "user")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "delete user",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    array = @ArraySchema(schema = @Schema(implementation = MovieUser.class)))
+                    })
+    })
+    @DeleteMapping("/movieUser/{id}")
+    public void deleteMovieUserById(@PathVariable Long id){
+        userService.deleteMovieUserById(id);
+    }
     @Operation(summary = "Get user by id", tags = "user")
     @ApiResponses(value = {
             @ApiResponse(

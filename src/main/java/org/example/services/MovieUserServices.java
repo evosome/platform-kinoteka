@@ -22,4 +22,5 @@ public class MovieUserServices {
     public MovieUser getUserById(long shelfId) {
         return movieUserRepository.findById(shelfId).orElseThrow(() -> new EntityNotFoundException("User not found with id: " + shelfId));
     }
+    public void deleteMovieUserById(long movieUserId) {movieUserRepository.deleteById(movieUserId); }
 }

@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import org.example.modules.Feedback;
 import org.example.modules.Film;
 import org.example.modules.MovieUser;
+import org.example.modules.Session;
 import org.example.services.FeedbackService;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -56,5 +57,21 @@ public class FeedbackController {
     @GetMapping("/feedbacks/{id}")
     public Feedback getFeedbackById(@PathVariable Long id){
         return feedbackServices.getFeedbackById(id);
+    }
+    @Operation(summary = "Delete feedback by id", tags = "feedback")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Delete feedback with id",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Feedback.class)))
+    })
+    @DeleteMapping("/feedback/{userId},{filmId},{feedbackId}")
+    public void deleteTicket(@PathVariable long userId,@PathVariable long filmId,@PathVariable long feedbackId){
+        Film film = FilmController.filmServices.getFilmById(filmId);
+        List<Feedback> feedbacks = film.getFeedbacks();
+        feedbacks.removeIf(feedback -> feedback.getFeedbackId() == feedbackId);
+        MovieUser movieUser = MovieUserController.userService.getUserById(userId);
+        List<Feedback> feedbacks1 = movieUser.getFeedbacks();
+        feedbacks1.removeIf(feedback -> feedback.getFeedbackId() == feedbackId);
+        feedbackServices.deleteFeedbackById(feedbackId);
     }
 }

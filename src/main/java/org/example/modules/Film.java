@@ -28,9 +28,6 @@ public class Film {
     private List<Genre> genres = new ArrayList<>();
     @ManyToMany(mappedBy = "countryMovies",cascade = CascadeType.ALL)
     private List<Country> countries = new ArrayList<>();
-//    @ManyToMany(mappedBy = "history",cascade = CascadeType.ALL)
-//    @JsonIgnore
-//    private List<BrowsingHistory> histories = new ArrayList<>();
     @OneToOne
     @JsonIgnore
     private Session sessionFk;

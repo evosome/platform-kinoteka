@@ -56,9 +56,11 @@ public class TicketController {
     @DeleteMapping("/ticket/{id}")
     public void deleteTicket(@PathVariable long id){
         MovieUser movieUser = MovieUserController.userService.getUserById(id);
-        movieUser.removeSession(ticketServices.getCinemaSessionById(id));
+        List<Ticket> tickets = movieUser.getMoviesWatched();
+        tickets.removeIf(ticket -> ticket.getTicketId() == id);
         Session session = SessionController.sessionService.getSessionById(id);
-        session.removeSession(ticketServices.getCinemaSessionById(id));
+        List<Ticket> tickets1 = session.getTickets();
+        tickets1.removeIf(ticket -> ticket.getTicketId() == id);
         ticketServices.deleteSessionById(id);
     }
     @Operation(summary = "Get ticket by id", tags = "tickets")

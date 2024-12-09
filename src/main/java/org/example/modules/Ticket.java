@@ -9,7 +9,7 @@ import javax.persistence.*;
 @Setter
 @Entity
 @Table(name = "Ticket")
-public class Ticket {
+public class  Ticket {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long ticketId;
@@ -21,5 +21,4 @@ public class Ticket {
     @ManyToOne
     private Session ticket;
     private Float price;
-
 }

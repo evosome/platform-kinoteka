@@ -29,13 +29,8 @@ public class MovieUser {
         moviesWatched.add(session);
         session.setTicketFk(this);
     }
-    public void removeSession(Ticket session) {
-        moviesWatched.remove(session);
-        session.setTicketFk(null);
-    }
     public void addFeedback(Feedback feedback) {
         feedbacks.add(feedback);
         feedback.setMovieUserFk(this);
     }
-
 }
