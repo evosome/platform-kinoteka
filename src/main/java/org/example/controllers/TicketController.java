@@ -1,5 +1,6 @@
 package org.example.controllers;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.example.dto.TicketDto;
 import org.example.modules.MovieUser;
 import org.example.modules.Session;
@@ -11,12 +12,14 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
+@Tag(name = "Ticket", description = "The Ticket API")
 @RestController
 @RequestMapping("/api1/v1")
+@CrossOrigin
 public class TicketController {
     private TicketServices ticketServices;
     public TicketController(TicketServices ticketServices){this.ticketServices = ticketServices;}
@@ -27,8 +30,10 @@ public class TicketController {
                             array = @ArraySchema(schema = @Schema(implementation = Ticket.class))))
     })
     @GetMapping("/ticket")
-    public List<Ticket> getTickets(){
-        return ticketServices.getAllCinemaSession();
+    public Page<Ticket> getTickets(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        return ticketServices.getAllTicket(page, size);
     }
     @Operation(summary = "Create new ticket", tags = "tickets")
     @ApiResponses(value = {

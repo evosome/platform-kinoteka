@@ -1,11 +1,14 @@
 package org.example.services;
 
+import org.example.modules.Producer;
 import org.example.modules.Ticket;
 import org.example.repositories.TicketRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityNotFoundException;
+import jakarta.persistence.*;
 import java.util.List;
 
 @Service
@@ -13,8 +16,8 @@ public class TicketServices {
     private TicketRepository ticketRepository;
     @Autowired
     public TicketServices(TicketRepository ticketRepository){this.ticketRepository = ticketRepository;}
-    public List<Ticket> getAllCinemaSession(){
-        return ticketRepository.findAll();
+    public Page<Ticket> getAllTicket(int page, int size){
+        return ticketRepository.findAll(PageRequest.of(page, size));
     }
     public Ticket createCinemaSession(Ticket ticket){
         return ticketRepository.save(ticket);

@@ -1,11 +1,14 @@
 package org.example.services;
 
+import org.example.modules.Cinemas;
 import org.example.modules.Feedback;
 import org.example.repositories.FeedbackRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityNotFoundException;
+import jakarta.persistence.*;
 import java.util.List;
 @Service
 public class FeedbackService {
@@ -14,9 +17,8 @@ public class FeedbackService {
     public FeedbackService(FeedbackRepository feedbackRepository) {
         this.feedbackRepository = feedbackRepository;
     }
-
-    public List<Feedback> getAllFeedback(){
-        return feedbackRepository.findAll();
+    public Page<Feedback> getAllFeedback(int page, int size){
+        return feedbackRepository.findAll(PageRequest.of(page, size));
     }
     public Feedback createFeedback(Feedback feedback){
         return feedbackRepository.save(feedback);

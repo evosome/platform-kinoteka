@@ -10,12 +10,14 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 @Tag(name = "Producers", description = "The Producers API")
 @RestController
 @RequestMapping("/api1/v1")
+@CrossOrigin
 public class ProducerController {
     public static ProducerService producerService;
     @Autowired
@@ -29,8 +31,10 @@ public class ProducerController {
                             array = @ArraySchema(schema = @Schema(implementation = Producer.class))))
     })
     @GetMapping("/producer")
-    public List<Producer> getProducerSession(){
-        return producerService.getAllProducer();
+    public Page<Producer> getProducerSession(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        return producerService.getAllProducer(page, size);
     }
     @Operation(summary = "Create new producer", tags = "producers")
     @ApiResponses(value = {

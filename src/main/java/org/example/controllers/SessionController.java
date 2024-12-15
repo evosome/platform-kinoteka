@@ -10,12 +10,14 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 @Tag(name = "Sessions", description = "The Sessions API")
 @RestController
 @RequestMapping("/api1/v1")
+@CrossOrigin
 public class SessionController {
     public static SessionService sessionService;
     @Autowired
@@ -29,8 +31,10 @@ public class SessionController {
                             array = @ArraySchema(schema = @Schema(implementation = Session.class))))
     })
     @GetMapping("/session")
-    public List<Session> getCinemaSession(){
-        return sessionService.getAllSession();
+    public Page<Session> getCinemaSession(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        return sessionService.getAllSession(page, size);
     }
     @Operation(summary = "Create new session", tags = "sessions")
     @ApiResponses(value = {

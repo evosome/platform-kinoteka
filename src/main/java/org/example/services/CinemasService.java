@@ -3,9 +3,11 @@ package org.example.services;
 import org.example.modules.Cinemas;
 import org.example.repositories.CinemasRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityNotFoundException;
+import jakarta.persistence.*;
 import java.util.List;
 
 @Service
@@ -15,9 +17,12 @@ public class CinemasService {
     public CinemasService(CinemasRepository cinemasRepository){
         this.cinemasRepository = cinemasRepository;
     }
-    public List<Cinemas> getAllCinemas(){
-        return cinemasRepository.findAll();
+    public Page<Cinemas> getAllCinemas(int page, int size){
+        return cinemasRepository.findAll(PageRequest.of(page, size));
     }
+//    public List<Cinemas> getAllCinemas(){
+//        return cinemasRepository.findAll();
+//    }
     public Cinemas createCinemas(Cinemas cinemas){
         return cinemasRepository.save(cinemas);
     }

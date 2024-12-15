@@ -10,12 +10,14 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 @Tag(name = "Genres", description = "The Genres API")
 @RestController
 @RequestMapping("/api1/v1")
+@CrossOrigin
 public class GenreController {
     private final GenreService genreService;
 
@@ -30,8 +32,10 @@ public class GenreController {
                             array = @ArraySchema(schema = @Schema(implementation = Genre.class))))
     })
     @GetMapping("/genres")
-    public List<Genre> getAllGenres() {
-        return genreService.getAllGenres();
+    public Page<Genre> getAllGenres(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        return genreService.getAllGenres(page, size);
     }
     @Operation(summary = "Create new genre", tags = "genres")
     @ApiResponses(value = {

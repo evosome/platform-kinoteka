@@ -10,12 +10,14 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 @Tag(name = "Countries", description = "The Countries API")
 @RestController
 @RequestMapping("/api1/v1")
+@CrossOrigin
 public class CountryController {
     private final CountryService countryService;
 
@@ -30,8 +32,10 @@ public class CountryController {
                             array = @ArraySchema(schema = @Schema(implementation = Country.class))))
     })
     @GetMapping("/countries")
-    public List<Country> getAllCountries() {
-        return countryService.getAllCountries();
+    public Page<Country> getAllCountries(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        return countryService.getAllCountries(page, size);
     }
     @Operation(summary = "Create new country", tags = "countries")
     @ApiResponses(value = {

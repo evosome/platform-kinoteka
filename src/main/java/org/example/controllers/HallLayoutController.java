@@ -10,12 +10,14 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 @Tag(name = "HallLayouts", description = "The Hall Layouts API")
 @RestController
 @RequestMapping("/api1/v1")
+@CrossOrigin
 public class HallLayoutController {
     public static HallLayoutService hallLayoutService;
     @Autowired
@@ -34,8 +36,10 @@ public class HallLayoutController {
                     })
     })
     @GetMapping("/lay")
-    public List<HallLayout> getHalls(){
-        return hallLayoutService.getAllHallLayout();
+    public Page<HallLayout> getHalls(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        return hallLayoutService.getAllHallLayout(page, size);
     }
     @Operation(summary = "Create new hall layout", tags = "hallLayouts")
     @ApiResponses(value = {

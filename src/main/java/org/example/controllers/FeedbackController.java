@@ -13,12 +13,14 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 @Tag(name = "Feedback", description = "The Feedback API")
 @RestController
 @RequestMapping("/api1/v1")
+@CrossOrigin
 public class FeedbackController {
     private FeedbackService feedbackServices;
     @Autowired
@@ -30,8 +32,10 @@ public class FeedbackController {
                             array = @ArraySchema(schema = @Schema(implementation = Feedback.class))))
     })
     @GetMapping("/feedback")
-    public List<Feedback> getCinemaSession(){
-        return feedbackServices.getAllFeedback();
+    public Page<Feedback> getCinemaSession(
+        @RequestParam(defaultValue = "0") int page,
+        @RequestParam(defaultValue = "10") int size) {
+            return feedbackServices.getAllFeedback(page, size);
     }
     @Operation(summary = "Create new feedback", tags = "feedback")
     @ApiResponses(value = {

@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.tags.*;
 import org.example.modules.MovieUser;
 import org.example.services.MovieUserServices;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,6 +19,7 @@ import java.util.List;
 @Tag(name = "User", description = "The User API")
 @RestController
 @RequestMapping("/api1/v1")
+@CrossOrigin
 public class MovieUserController {
     public static MovieUserServices userService;
     @Autowired
@@ -36,9 +38,10 @@ public class MovieUserController {
                     })
     })
     @GetMapping("/movieUser")
-    public List<MovieUser> getUser(){
-
-        return userService.getAllUser();
+    public Page<MovieUser> getUser(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        return userService.getAllUser(page, size);
     }
     @Operation(summary = "Create new users", tags = "user")
     @ApiResponses(value = {

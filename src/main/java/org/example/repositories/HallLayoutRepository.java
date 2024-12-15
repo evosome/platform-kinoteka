@@ -1,9 +1,11 @@
 package org.example.repositories;
 
 import org.example.modules.HallLayout;
+import org.example.modules.Halls;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface HallLayoutRepository extends JpaRepository<HallLayout, Long> {
+public interface HallLayoutRepository extends JpaRepository<HallLayout, Long>, PagingAndSortingRepository<HallLayout,Long> {
 }

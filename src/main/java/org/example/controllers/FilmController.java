@@ -10,12 +10,14 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 @Tag(name = "Films", description = "The Films API")
 @RestController
 @RequestMapping("/api1/v1")
+@CrossOrigin
 public class FilmController {
     public static FilmServices filmServices;
     @Autowired
@@ -29,9 +31,10 @@ public class FilmController {
                             array = @ArraySchema(schema = @Schema(implementation = Film.class))))
     })
     @GetMapping("/film")
-    public List<Film> getFilm(){
-
-        return filmServices.getAllFilm();
+    public Page<Film> getFilm(
+        @RequestParam(defaultValue = "0") int page,
+        @RequestParam(defaultValue = "10") int size) {
+            return filmServices.getAllFilm(page, size);
     }
     @Operation(summary = "Create new film", tags = "films")
     @ApiResponses(value = {

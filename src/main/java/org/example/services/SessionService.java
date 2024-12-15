@@ -1,10 +1,12 @@
 package org.example.services;
 
 import org.example.modules.Session;
+import org.example.modules.Ticket;
 import org.example.repositories.SessionRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-
-import javax.persistence.EntityNotFoundException;
+import jakarta.persistence.*;
 import java.util.List;
 @Service
 public class SessionService {
@@ -12,8 +14,8 @@ public class SessionService {
     public SessionService(SessionRepository sessionRepository) {
         this.sessionRepository = sessionRepository;
     }
-    public List<Session> getAllSession(){
-        return sessionRepository.findAll();
+    public Page<Session> getAllSession(int page, int size){
+        return sessionRepository.findAll(PageRequest.of(page, size));
     }
     public Session createSession(Session session){
         return sessionRepository.save(session);

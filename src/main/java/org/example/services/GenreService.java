@@ -1,11 +1,14 @@
 package org.example.services;
 
+import org.example.modules.Film;
 import org.example.modules.Genre;
 import org.example.repositories.GenreRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityNotFoundException;
+import jakarta.persistence.*;
 import java.util.List;
 
 @Service
@@ -16,11 +19,9 @@ public class GenreService {
     public GenreService(GenreRepository genreRepository) {
         this.genreRepository = genreRepository;
     }
-
-    public List<Genre> getAllGenres() {
-        return genreRepository.findAll();
+    public Page<Genre> getAllGenres(int page, int size){
+        return genreRepository.findAll(PageRequest.of(page, size));
     }
-
     public Genre createGenre(Genre genre) {
         return genreRepository.save(genre);
     }
