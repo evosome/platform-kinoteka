@@ -24,7 +24,8 @@ public class Session {
     @OneToMany(mappedBy = "ticket",cascade = CascadeType.ALL,orphanRemoval = true)
     @JsonIgnore
     private List<Ticket> tickets = new ArrayList<>();
-    @OneToOne
+    @ManyToOne
+    @JsonIgnore
     private Film filmFk;
     public void addTicket(Ticket ticket) {
         tickets.add(ticket);

@@ -22,15 +22,15 @@ public class Film {
     private String title;
     private int year;
     private int duration;
+    public String cover;
     @OneToMany(mappedBy = "filmFk",cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Feedback> feedbacks = new ArrayList<>();
     @ManyToMany(mappedBy = "genresMovies",cascade = CascadeType.ALL)
     private List<Genre> genres = new ArrayList<>();
     @ManyToMany(mappedBy = "countryMovies",cascade = CascadeType.ALL)
     private List<Country> countries = new ArrayList<>();
-    @OneToOne
-    @JsonIgnore
-    private Session sessionFk;
+    @OneToMany
+    private List<Session> sessions = new ArrayList<>();
 
     public void addProducer(Film film) {
         List<Producer> producers = film.getProducers();
@@ -55,8 +55,8 @@ public class Film {
         }
     }
     public void addSession(Session session) {
-       session.setFilmFk(this);
-       sessionFk = session;
+      sessions.add(session);
+      session.setFilmFk(this);
 
     }
     public void addFeedback(Feedback feedback) {
