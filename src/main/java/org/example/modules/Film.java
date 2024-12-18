@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +15,7 @@ import java.util.List;
 @Entity
 @Table(name = "Film")
 public class Film {
+    private static final Logger log = LoggerFactory.getLogger(Film.class);
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long filmId;
@@ -31,6 +34,8 @@ public class Film {
     private List<Country> countries = new ArrayList<>();
     @OneToMany
     private List<Session> sessions = new ArrayList<>();
+    @OneToMany
+    private List<PhotoLinks> links = new ArrayList<>();
 
     public void addProducer(Film film) {
         List<Producer> producers = film.getProducers();
@@ -62,5 +67,9 @@ public class Film {
     public void addFeedback(Feedback feedback) {
         feedbacks.add(feedback);
         feedback.setFilmFk(this);
+    }
+    public void addLinks(PhotoLinks link) {
+        links.add(link);
+        link.setFilm(this);
     }
 }

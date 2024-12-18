@@ -20,10 +20,18 @@ public class MovieUserServices {
         return movieUserRepository.findAll(PageRequest.of(page, size));
     }
     public MovieUser createUser(MovieUser movieUser){
+        if (movieUserRepository.existsByUsername(movieUser.getLogin())) {
+            throw new RuntimeException("Пользователь с таким именем уже существует");
+        }
+
+        if (movieUserRepository.existsByEmail(movieUser.getEmail())) {
+            throw new RuntimeException("Пользователь с таким email уже существует");
+        }
         return movieUserRepository.save(movieUser);
     }
     public MovieUser getUserById(long shelfId) {
         return movieUserRepository.findById(shelfId).orElseThrow(() -> new EntityNotFoundException("User not found with id: " + shelfId));
     }
     public void deleteMovieUserById(long movieUserId) {movieUserRepository.deleteById(movieUserId); }
+
 }
