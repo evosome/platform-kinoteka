@@ -12,6 +12,7 @@ import org.example.services.MovieUserServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -54,9 +55,10 @@ public class MovieUserController {
                                     array = @ArraySchema(schema = @Schema(implementation = MovieUser.class)))
                     })
     })
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/movieUser")
     public ResponseEntity<String> createMovieUser(@RequestBody MovieUser movieUser){
-        if(movieUser.getPassword().length()>=4&&movieUser.getPassword().length()<=12 && movieUser.getLogin().length()>=4&&movieUser.getLogin().length()<=12){
+        if(movieUser.getPassword().length()>=4&&movieUser.getPassword().length()<=12 && movieUser.getUsername().length()>=4&&movieUser.getUsername().length()<=12){
             userService.createUser(movieUser);
             return ResponseEntity.ok("Ok");
         }else{

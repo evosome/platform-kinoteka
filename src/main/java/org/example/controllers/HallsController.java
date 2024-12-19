@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -42,6 +43,7 @@ public class HallsController {
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = Halls.class)))
     })
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/hall/{cinemasId},{hallId}")
     public Halls createHalls(@PathVariable int cinemasId, @PathVariable int hallId, @RequestBody Halls hall){
         Cinemas cinemas = CinemasController.cinemasServices.getCinemasById(cinemasId);

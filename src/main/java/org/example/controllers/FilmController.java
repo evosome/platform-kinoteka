@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -42,6 +43,7 @@ public class FilmController {
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = Film.class)))
     })
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/film")
     public Film createFilm(@RequestBody Film film){
         film.addProducer(film);

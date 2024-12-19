@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -43,6 +44,7 @@ public class GenreController {
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = Genre.class)))
     })
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/genres")
     public Genre createGenre(@RequestBody Genre genre) {
         return genreService.createGenre(genre);

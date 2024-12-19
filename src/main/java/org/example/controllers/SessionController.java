@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -44,6 +45,7 @@ public class SessionController {
             @ApiResponse(responseCode = "400", description = "Bad Request - Hall or Film not found"),
             @ApiResponse(responseCode = "500", description = "Internal Server Error")
     })
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/session/{hallId},{filmId}")
     public Session createSession(@PathVariable int hallId, @PathVariable int filmId, @RequestBody Session session){
         Halls hall = HallsController.hallsService.getHallsById(hallId);

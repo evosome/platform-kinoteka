@@ -14,6 +14,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -43,6 +44,7 @@ public class FeedbackController {
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = Feedback.class)))
     })
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/feedback/{userId},{filmId}")
     public Feedback createFeedback(@PathVariable long userId,@PathVariable long filmId,@RequestBody Feedback feedback){
         Film film = FilmController.filmServices.getFilmById(filmId);
@@ -68,6 +70,7 @@ public class FeedbackController {
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = Feedback.class)))
     })
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/feedback/{userId},{filmId},{feedbackId}")
     public void deleteTicket(@PathVariable long userId,@PathVariable long filmId,@PathVariable long feedbackId){
         Film film = FilmController.filmServices.getFilmById(filmId);

@@ -10,7 +10,5 @@ import java.util.Optional;
 
 @Repository
 public interface MovieUserRepository extends JpaRepository<MovieUser,Long>, PagingAndSortingRepository<MovieUser,Long> {
-    Optional<MovieUser> findByUsername(String username);
-    boolean existsByUsername(String username);
-    boolean existsByEmail(String email);
+    MovieUser findByUsername(String username);
 }

@@ -13,6 +13,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.data.domain.Page;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -43,6 +44,7 @@ public class TicketController {
             @ApiResponse(responseCode = "400", description = "Bad Request - User or Session not found"),
             @ApiResponse(responseCode = "500", description = "Internal Server Error")
     })
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/ticket/{sessionId},{userId}")
     public Ticket createTicket(@PathVariable long sessionId, @PathVariable long userId,@RequestBody Ticket ticket){
         MovieUser movieUser = MovieUserController.userService.getUserById(userId);
@@ -58,6 +60,7 @@ public class TicketController {
             @ApiResponse(responseCode = "404", description = "Ticket not found"),
             @ApiResponse(responseCode = "500", description = "Internal Server Error")
     })
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/ticket/{id}")
     public void deleteTicket(@PathVariable long id){
         MovieUser movieUser = MovieUserController.userService.getUserById(id);
