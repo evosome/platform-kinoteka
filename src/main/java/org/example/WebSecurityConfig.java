@@ -50,7 +50,7 @@ public class WebSecurityConfig {
                         })
                 )
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/", "/login", "/register", "/static/css/styles.css", "/images").permitAll()
+                        .requestMatchers("/", "/login", "/register", "/swagger-ui/index.html", "/images").permitAll()
                         .anyRequest().hasAnyRole("USER", "ADMIN")
                 )
                 .formLogin((form)->form

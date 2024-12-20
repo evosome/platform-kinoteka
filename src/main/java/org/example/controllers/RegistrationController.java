@@ -29,6 +29,38 @@ public class RegistrationController {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @GetMapping("/login")
+    public String login() {
+        return "login";
+    }
+
+    @PostMapping("/login")
+    public String loginUser(@RequestParam String username, @RequestParam String password, HttpServletRequest request, Model model) {
+        UserDetails userDetails = null;
+        try
+        {
+            userDetails = userService.getCurrentAuthenticatedUser();
+            if (passwordEncoder.matches(password, userDetails.getPassword())) {
+                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+                HttpSession session = request.getSession();
+                session.setAttribute("user", userDetails);
+                return "redirect:/";
+            }
+            else
+            {
+                model.addAttribute("error", "Invalid password.");
+                return "redirect:/login?error";
+            }
+        }
+        catch (UsernameNotFoundException e)
+        {
+            model.addAttribute("error", "User not found.");
+            return "redirect:/login?error";
+        }
+    }
+
+
     @GetMapping("/register")
     public String showRegistrationForm() {
         System.out.println("Showing registration form"); // Для проверки
@@ -50,27 +82,5 @@ public class RegistrationController {
             return "redirect:/register";
         }
     }
-
-    //    @Autowired
-//    private UserService userService;
-//
-//    @Autowired
-//    private PasswordEncoder passwordEncoder;
-//
    public RegistrationController(MovieUserServices service) {this.userService = service;}
-
-
-//    @GetMapping("/register")
-//    public String register(){
-//        return "register";
-//    }
-//
-//    @PostMapping("/register")
-//    public String registerPlayer(MovieUser user) {
-//        if (userService.createUser(user))
-//        {
-//            return "redirect:/login";
-//        }
-//        return "redirect:/register?error";
-//    }
 }  
