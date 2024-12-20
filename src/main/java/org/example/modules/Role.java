@@ -6,9 +6,10 @@ import org.springframework.security.core.GrantedAuthority;
 import java.util.Set;
 
 @Entity
-@Table(name = "t_role")
+@Table(name = "Role")
 public class Role implements GrantedAuthority {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
     @Transient
@@ -17,8 +18,8 @@ public class Role implements GrantedAuthority {
     public Role() {
     }
 
-    public Role(Long id) {
-        this.id = id;
+    public Role(String name) {
+        this.name = name;
     }
 
     public Role(Long id, String name) {

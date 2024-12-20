@@ -59,6 +59,7 @@ public class MovieUserController {
     @PostMapping("/movieUser")
     public ResponseEntity<String> createMovieUser(@RequestBody MovieUser movieUser){
         if(movieUser.getPassword().length()>=4&&movieUser.getPassword().length()<=12 && movieUser.getUsername().length()>=4&&movieUser.getUsername().length()<=12){
+            movieUser.addRole(movieUser);
             userService.createUser(movieUser);
             return ResponseEntity.ok("Ok");
         }else{

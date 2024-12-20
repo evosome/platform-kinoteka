@@ -34,7 +34,13 @@ public class MovieUser implements UserDetails {
     public MovieUser() {
 
     }
-
+    public void addRole(MovieUser user) {
+        Set<Role> roles = user.getRoles();
+        for(Role role : roles) {
+            Set<MovieUser> users = role.getUsers();
+            users.add(this);
+        }
+    }
     public void addSession(Ticket session) {
         moviesWatched.add(session);
         session.setTicketFk(this);
