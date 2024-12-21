@@ -24,9 +24,9 @@ public class MovieUser implements UserDetails {
     private String username;
     private String telephoneNumber;
     private String password;
-    @OneToMany(mappedBy = "ticketFk",cascade = CascadeType.ALL,orphanRemoval = true)
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "ticketFk",cascade = CascadeType.ALL,orphanRemoval = true)
     private List<Ticket> moviesWatched = new ArrayList<>();
-    @OneToMany(mappedBy = "movieUserFk",cascade = CascadeType.ALL,orphanRemoval = true)
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "movieUserFk",cascade = CascadeType.ALL,orphanRemoval = true)
     private List<Feedback> feedbacks = new ArrayList<>();
     @ManyToMany(fetch = FetchType.EAGER)
     private Set<Role> roles;

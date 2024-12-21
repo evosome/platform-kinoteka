@@ -7,6 +7,7 @@ import org.example.repositories.RoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.acls.model.AlreadyExistsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,23 +18,25 @@ import jakarta.persistence.*;
 import java.util.Collections;
 
 @Service
-public class MovieUserServices implements UserDetailsService {
+public class MovieUserServices {
+
     @PersistenceContext
     private EntityManager em;
+
     @Autowired
     private RoleRepository roleRepository;
+
     @Autowired
     public MovieUserRepository movieUserRepository;
-    @Autowired
-    public MovieUserServices(MovieUserRepository movieUserRepository){this.movieUserRepository = movieUserRepository;}
+
     public Page<MovieUser> getAllUser(int page, int size){
         return movieUserRepository.findAll(PageRequest.of(page, size));
     }
-    public boolean createUser(MovieUser movieUser) {
+
+    public void createUser(MovieUser movieUser) {
         MovieUser userFromDB = movieUserRepository.findByUsername(movieUser.getUsername());
-        if (userFromDB != null) {
-            return false;
-        }
+
+        if (userFromDB != null) throw new AlreadyExistsException("User already exists");
 
         Role userRole = roleRepository.findByName("USER");
         if (userRole == null) {
@@ -43,23 +46,14 @@ public class MovieUserServices implements UserDetailsService {
 
         movieUser.setRoles(Collections.singleton(userRole));
         movieUserRepository.save(movieUser);
-        return true;
     }
+
     public MovieUser getUserById(long shelfId) {
         return movieUserRepository.findById(shelfId).orElseThrow(() -> new EntityNotFoundException("User not found with id: " + shelfId));
     }
+
     public void deleteMovieUserById(long movieUserId) {movieUserRepository.deleteById(movieUserId); }
 
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        MovieUser user = movieUserRepository.findByUsername(username);
-
-        if (user == null) {
-            throw new UsernameNotFoundException("User not found");
-        }
-
-        return user;
-    }
     public MovieUser getCurrentAuthenticatedUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.isAuthenticated()) {
@@ -72,5 +66,9 @@ public class MovieUserServices implements UserDetailsService {
             }
         }
         throw new UsernameNotFoundException("User not found");
+    }
+
+    public MovieUser getUserByName(String username) {
+        return movieUserRepository.findByUsername(username);
     }
 }

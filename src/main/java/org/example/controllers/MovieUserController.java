@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -96,21 +97,12 @@ public class MovieUserController {
     public MovieUser getMovieUserById(@PathVariable long id){
         return userService.getUserById(id);
     }
-//    public static MovieUserDto MovieUserToMovieUserDto(MovieUser movieUser) {
-//        MovieUserDto movieUserDto = new MovieUserDto();
-//        movieUserDto.setUserId(movieUser.getUserId());
-//        movieUserDto.setName(movieUser.getName());
-//        movieUserDto.setSurName(movieUser.getSurName());
-//        movieUserDto.setEmail(movieUser.getEmail());
-//        movieUserDto.setTelephoneNumber(movieUser.getTelephoneNumber());
-//        List<TicketDto> ticketDtos = new ArrayList<>();
-//        for (Ticket ticket : movieUser.getMoviesWatched()) {
-//            TicketDto ticketDto = TicketToDto(ticket);
-//            ticketDtos.add(ticketDto);
-//        }
-//        movieUserDto.setMoviesWatched(ticketDtos);
-//
-//        return movieUserDto;
-//    }
 
+    @PreAuthorize("isFullyAuthenticated()")
+    @GetMapping("/movieUser/me")
+    public MovieUser getCurrentMovieUser(
+            @AuthenticationPrincipal MovieUser user
+    ) {
+        return userService.getCurrentAuthenticatedUser();
+    }
 }
