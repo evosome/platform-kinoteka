@@ -1,6 +1,9 @@
 package org.example.controllers;
 
+import lombok.AllArgsConstructor;
+import org.example.modules.Feedback;
 import org.example.modules.Film;
+import org.example.services.FeedbackService;
 import org.example.services.FilmServices;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -19,12 +22,13 @@ import java.util.List;
 @RestController
 @RequestMapping("/api1/v1")
 @CrossOrigin
+@AllArgsConstructor
 public class FilmController {
-    public static FilmServices filmServices;
-    @Autowired
-    public FilmController(FilmServices filmServices){
-        FilmController.filmServices = filmServices;
-    }
+
+    private final FilmServices filmServices;
+
+    private final FeedbackService feedbackService;
+
     @Operation(summary = "Gets all films", tags = "films")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Found the films",
@@ -52,6 +56,7 @@ public class FilmController {
         filmServices.createFilm(film);
         return film;
     }
+
     @Operation(summary = "Get film by id", tags = "films")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Found film with id",
@@ -64,5 +69,14 @@ public class FilmController {
 //        Film film = filmServices.getFilmById(id);
 //        return FilmToFilmDto(film);
         return filmServices.getFilmById(id);
+    }
+
+    @GetMapping("/film/{id}/feedbacks")
+    public Page<Feedback> getAssociatedFeedbacks(
+            @PathVariable Long id,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        return feedbackService.getFeedbacksByMovieId(id, page, size);
     }
 }

@@ -1,6 +1,7 @@
 package org.example.controllers;
 
 import io.swagger.v3.oas.annotations.Operation;
+import lombok.AllArgsConstructor;
 import org.example.modules.Feedback;
 import org.example.modules.Film;
 import org.example.modules.MovieUser;
@@ -12,6 +13,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.example.services.FilmServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -22,10 +24,13 @@ import java.util.List;
 @RestController
 @RequestMapping("/api1/v1")
 @CrossOrigin
+@AllArgsConstructor
 public class FeedbackController {
-    private FeedbackService feedbackServices;
-    @Autowired
-    public FeedbackController(FeedbackService feedbackServices){this.feedbackServices = feedbackServices;}
+
+    private final FilmServices filmServices;
+
+    private final FeedbackService feedbackServices;
+
     @Operation(summary = "Gets all feedback", tags = "feedback")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Found the feedback",
@@ -47,7 +52,7 @@ public class FeedbackController {
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/feedback/{userId},{filmId}")
     public Feedback createFeedback(@PathVariable long userId,@PathVariable long filmId,@RequestBody Feedback feedback){
-        Film film = FilmController.filmServices.getFilmById(filmId);
+        Film film = filmServices.getFilmById(filmId);
         film.addFeedback(feedback);
         MovieUser movieUser = MovieUserController.userService.getUserById(userId);
         movieUser.addFeedback(feedback);
@@ -73,7 +78,7 @@ public class FeedbackController {
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/feedback/{userId},{filmId},{feedbackId}")
     public void deleteTicket(@PathVariable long userId,@PathVariable long filmId,@PathVariable long feedbackId){
-        Film film = FilmController.filmServices.getFilmById(filmId);
+        Film film = filmServices.getFilmById(filmId);
         List<Feedback> feedbacks = film.getFeedbacks();
         feedbacks.removeIf(feedback -> feedback.getFeedbackId() == feedbackId);
         MovieUser movieUser = MovieUserController.userService.getUserById(userId);

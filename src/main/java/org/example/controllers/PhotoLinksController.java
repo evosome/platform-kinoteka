@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.example.modules.Film;
 import org.example.modules.PhotoLinks;
+import org.example.services.FilmServices;
 import org.example.services.PhotoLinksService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -23,8 +24,11 @@ import org.springframework.web.bind.annotation.*;
 public class PhotoLinksController {
     public static PhotoLinksService photoLinksService;
 
+    private final FilmServices filmServices;
+
     @Autowired
-    public PhotoLinksController(PhotoLinksService photoLinksService) {
+    public PhotoLinksController(PhotoLinksService photoLinksService, FilmServices filmServices) {
+        this.filmServices = filmServices;
         PhotoLinksController.photoLinksService = photoLinksService;
     }
 
@@ -60,7 +64,7 @@ public class PhotoLinksController {
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/photoLinks/{id}")
     public PhotoLinks createPhotoLink(@PathVariable long id,@RequestBody PhotoLinks photoLink) {
-        Film film = FilmController.filmServices.getFilmById(id);
+        Film film = filmServices.getFilmById(id);
         film.addLinks(photoLink);
         photoLinksService.createLink(photoLink);
         return photoLink;

@@ -1,5 +1,6 @@
 package org.example.services;
 
+import lombok.AllArgsConstructor;
 import org.example.modules.Cinemas;
 import org.example.modules.Feedback;
 import org.example.repositories.FeedbackRepository;
@@ -11,13 +12,14 @@ import org.springframework.stereotype.Service;
 import jakarta.persistence.*;
 import java.util.List;
 @Service
+@AllArgsConstructor
 public class FeedbackService {
-    public FeedbackRepository feedbackRepository;
-    @Autowired
-    public FeedbackService(FeedbackRepository feedbackRepository) {
-        this.feedbackRepository = feedbackRepository;
-    }
-    public Page<Feedback> getAllFeedback(int page, int size){
+
+    private final FeedbackRepository feedbackRepository;
+
+    private final FilmServices filmServices;
+
+    public Page<Feedback> getAllFeedback(int page, int size) {
         return feedbackRepository.findAll(PageRequest.of(page, size));
     }
     public Feedback createFeedback(Feedback feedback){
@@ -27,4 +29,8 @@ public class FeedbackService {
         return feedbackRepository.findById(feedbackId).orElseThrow(() -> new EntityNotFoundException("Producer not found with id: " + feedbackId));
     }
     public void deleteFeedbackById(long feedbackId) {feedbackRepository.deleteById(feedbackId); }
+
+    public Page<Feedback> getFeedbacksByMovieId(long movieId, int page, int size) {
+        return feedbackRepository.getByFilmFk(filmServices.getFilmById(movieId), PageRequest.of(page, size));
+    }
 }

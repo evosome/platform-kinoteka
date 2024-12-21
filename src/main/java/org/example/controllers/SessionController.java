@@ -1,6 +1,8 @@
 package org.example.controllers;
 
+import lombok.AllArgsConstructor;
 import org.example.modules.*;
+import org.example.services.FilmServices;
 import org.example.services.SessionService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -21,10 +23,15 @@ import java.util.List;
 @CrossOrigin
 public class SessionController {
     public static SessionService sessionService;
+
+    private final FilmServices filmServices;
+
     @Autowired
-    public SessionController(SessionService sessionService){
+    public SessionController(SessionService sessionService, FilmServices filmServices){
+        this.filmServices = filmServices;
         SessionController.sessionService = sessionService;
     }
+
     @Operation(summary = "Gets all sessions", tags = "sessions")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Found the sessions",
@@ -50,7 +57,7 @@ public class SessionController {
     public Session createSession(@PathVariable int hallId, @PathVariable int filmId, @RequestBody Session session){
         Halls hall = HallsController.hallsService.getHallsById(hallId);
         hall.addSessions(session);
-        Film film = FilmController.filmServices.getFilmById((long) filmId);
+        Film film = filmServices.getFilmById((long) filmId);
         film.addSession(session);
         sessionService.createSession(session);
         return session;

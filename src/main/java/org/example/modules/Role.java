@@ -15,8 +15,8 @@ public class Role implements GrantedAuthority {
     @Transient
     @ManyToMany(mappedBy = "roles",cascade = CascadeType.ALL)
     private Set<MovieUser> users;
-    public Role() {
-    }
+
+    public Role() { }
 
     public Role(String name) {
         this.name = name;
@@ -53,6 +53,6 @@ public class Role implements GrantedAuthority {
 
     @Override
     public String getAuthority() {
-        return getName();
+        return "ROLE_" + name;
     }
 }
