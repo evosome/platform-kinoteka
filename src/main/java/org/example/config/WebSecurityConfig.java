@@ -24,6 +24,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
@@ -61,6 +62,16 @@ public class WebSecurityConfig {
                         })
                 )
                 .httpBasic(Customizer.withDefaults())
+                .exceptionHandling(
+                        httpSecurityExceptionHandlingConfigurer ->
+                                httpSecurityExceptionHandlingConfigurer.authenticationEntryPoint(
+                                        (request, response, authException) ->
+                                                response.sendError(
+                                                        HttpStatus.FORBIDDEN.value(),
+                                                        authException.getMessage()
+                                                )
+                                )
+                )
                 .formLogin(
                         form ->
                                 form
@@ -68,12 +79,8 @@ public class WebSecurityConfig {
                                                 (request, response, authentication) -> response.setStatus(HttpStatus.NO_CONTENT.value())
                                         )
                                         .failureHandler(
-                                                (request, response, authentication) -> response.sendError(HttpStatus.FORBIDDEN.value())
+                                                (request, response, authentication) -> response.sendError(HttpStatus.UNAUTHORIZED.value())
                                         )
-                )
-                .exceptionHandling(
-                        httpSecurityExceptionHandlingConfigurer -> httpSecurityExceptionHandlingConfigurer
-                                .authenticationEntryPoint((request, response, exception) -> response.sendError(HttpStatus.FORBIDDEN.value()))
                 )
                 .authorizeHttpRequests((auth) -> auth
                         .anyRequest().permitAll()
