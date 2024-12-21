@@ -34,8 +34,11 @@ public class SessionController {
     @GetMapping("/session")
     public Page<Session> getCinemaSession(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
-        return sessionService.getAllSession(page, size);
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(required = false) String date,
+            @RequestParam(required = false) String cinemaType,
+            @RequestParam(required = false) Long hallId) {
+        return sessionService.getAllSession(page, size, date, cinemaType, hallId);
     }
     @Operation(summary = "Create new session", tags = "sessions")
     @ApiResponses(value = {

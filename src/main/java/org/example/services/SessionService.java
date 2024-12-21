@@ -3,6 +3,7 @@ package org.example.services;
 import org.example.modules.Session;
 import org.example.modules.Ticket;
 import org.example.repositories.SessionRepository;
+import org.example.specification.SessionSpecification;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -14,8 +15,8 @@ public class SessionService {
     public SessionService(SessionRepository sessionRepository) {
         this.sessionRepository = sessionRepository;
     }
-    public Page<Session> getAllSession(int page, int size){
-        return sessionRepository.findAll(PageRequest.of(page, size));
+    public Page<Session> getAllSession(int page, int size, String date, String cinemaType, Long hallId) {
+        return sessionRepository.findAll(SessionSpecification.combineFilters(date, cinemaType, hallId), PageRequest.of(page, size));
     }
     public Session createSession(Session session){
         return sessionRepository.save(session);
