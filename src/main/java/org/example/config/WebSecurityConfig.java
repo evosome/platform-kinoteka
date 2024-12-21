@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.security.acls.model.AlreadyExistsException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -60,17 +61,22 @@ public class WebSecurityConfig {
                         })
                 )
                 .httpBasic(Customizer.withDefaults())
-                .formLogin(Customizer.withDefaults())
+                .formLogin(
+                        form ->
+                                form
+                                        .successHandler(
+                                                (request, response, authentication) -> response.setStatus(HttpStatus.NO_CONTENT.value())
+                                        )
+                                        .failureHandler(
+                                                (request, response, authentication) -> response.sendError(HttpStatus.FORBIDDEN.value())
+                                        )
+                )
                 .exceptionHandling(
                         httpSecurityExceptionHandlingConfigurer -> httpSecurityExceptionHandlingConfigurer
                                 .authenticationEntryPoint((request, response, exception) -> response.sendError(HttpStatus.FORBIDDEN.value()))
                 )
                 .authorizeHttpRequests((auth) -> auth
                         .anyRequest().permitAll()
-                )
-                .sessionManagement(
-                        httpSecuritySessionManagementConfigurer ->
-                                httpSecuritySessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 .authenticationProvider(authenticationProvider());
         return http.build();
