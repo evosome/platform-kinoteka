@@ -18,7 +18,7 @@ import java.util.List;
 @Tag(name = "HallLayouts", description = "The Hall Layouts API")
 @RestController
 @RequestMapping("/api1/v1")
-@CrossOrigin
+@CrossOrigin(origins = "*", maxAge = 3600)
 public class HallLayoutController {
     public static HallLayoutService hallLayoutService;
     @Autowired

@@ -18,7 +18,7 @@ import java.util.List;
 @Tag(name = "Countries", description = "The Countries API")
 @RestController
 @RequestMapping("/api1/v1")
-@CrossOrigin
+@CrossOrigin(origins = "*", maxAge = 3600)
 public class CountryController {
     private final CountryService countryService;
 

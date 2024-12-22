@@ -26,4 +26,7 @@ public class FilmServices {
     public Film getFilmById(Long bookId) {
         return filmRepository.findById(bookId).orElseThrow(() -> new EntityNotFoundException("Film not found with id: " + bookId));
     }
+    public void deleteFilmById(long filmId){
+        filmRepository.deleteById(filmId);
+    }
 }

@@ -1,8 +1,7 @@
 package org.example.controllers;
 
 import lombok.AllArgsConstructor;
-import org.example.modules.Feedback;
-import org.example.modules.Film;
+import org.example.modules.*;
 import org.example.services.FeedbackService;
 import org.example.services.FilmServices;
 import io.swagger.v3.oas.annotations.Operation;
@@ -14,6 +13,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,7 +21,7 @@ import java.util.List;
 @Tag(name = "Films", description = "The Films API")
 @RestController
 @RequestMapping("/api1/v1")
-@CrossOrigin
+@CrossOrigin(origins = "*", maxAge = 3600)
 @AllArgsConstructor
 public class FilmController {
 
@@ -75,7 +75,47 @@ public class FilmController {
 //        return FilmToFilmDto(film);
         return filmServices.getFilmById(id);
     }
+    @Operation(summary = "Delete feedback by id", tags = "feedback")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Delete feedback with id",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Feedback.class)))
+    })
+    @PreAuthorize("hasRole('ADMIN')")
+    @DeleteMapping("/film/{filmId}")
+    public void deleteFilm(@PathVariable long filmId) {
+        Film film = filmServices.getFilmById(filmId);
+        List<Genre> genres = film.getGenres();
+        film.removeGenre(genres);
+        List<Producer> producers = film.getProducers();
+        film.removeProducer(producers);
+        List<Country> countries = film.getCountries();
+        film.removeCountry(countries);
+        filmServices.deleteFilmById(filmId);
+    }
+    @PreAuthorize("hasRole('ADMIN')")
+    @PutMapping("/film/{filmId}")
+    public ResponseEntity<Film> updateFilm(@PathVariable long filmId, @RequestBody Film updatedFilm) {
+        Film existingFilm = filmServices.getFilmById(filmId);
+        if (existingFilm == null) {
+            return ResponseEntity.notFound().build();
+        }
+        existingFilm.setTitle(updatedFilm.getTitle());
+        existingFilm.setYear(updatedFilm.getYear());
+        existingFilm.setDuration(updatedFilm.getDuration());
+        existingFilm.setAgeRestriction(updatedFilm.getAgeRestriction());
+        existingFilm.setReleased(updatedFilm.isReleased());
+        existingFilm.setBoxOffice(updatedFilm.isBoxOffice());
+        existingFilm.setDescription(updatedFilm.getDescription());
+        existingFilm.setMark(updatedFilm.getMark());
+        existingFilm.setCover(updatedFilm.getCover());
+        existingFilm.setProducers(updatedFilm.getProducers());
+        existingFilm.setGenres(updatedFilm.getGenres());
+        existingFilm.setCountries(updatedFilm.getCountries());
+        filmServices.createFilm(existingFilm);
 
+        return ResponseEntity.ok(existingFilm);
+    }
     @GetMapping("/film/{id}/feedbacks")
     public Page<Feedback> getAssociatedFeedbacks(
             @PathVariable Long id,

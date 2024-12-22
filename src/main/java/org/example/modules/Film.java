@@ -19,19 +19,24 @@ public class Film {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long filmId;
-    @ManyToMany(mappedBy = "directorsMovies",cascade = CascadeType.ALL)
-    private List<Producer> producers = new ArrayList<>();
     private Float mark;
     private String title;
     private int year;
     private int duration;
     private int ageRestriction;
+    @Column(nullable = false, columnDefinition = "boolean default false")
+    private boolean released;
+    @Column(nullable = false, columnDefinition = "boolean default false")
+    private boolean isBoxOffice;
     public String cover;
+    private String description;
     @OneToMany(mappedBy = "filmFk",cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Feedback> feedbacks = new ArrayList<>();
-    @ManyToMany(mappedBy = "genresMovies",cascade = CascadeType.ALL)
+    @ManyToMany(mappedBy = "directorsMovies", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    private List<Producer> producers = new ArrayList<>();
+    @ManyToMany(mappedBy = "genresMovies", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private List<Genre> genres = new ArrayList<>();
-    @ManyToMany(mappedBy = "countryMovies",cascade = CascadeType.ALL)
+    @ManyToMany(mappedBy = "countryMovies", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private List<Country> countries = new ArrayList<>();
     @OneToMany
     private List<Session> sessions = new ArrayList<>();
@@ -72,5 +77,25 @@ public class Film {
     public void addLinks(PhotoLinks link) {
         links.add(link);
         link.setFilm(this);
+    }
+    public void removeProducer(List<Producer> producers) {
+       for (Producer producer : producers) {
+           List<Film> films = producer.getDirectorsMovies();
+           films.remove(this);
+       }
+    }
+
+    public void removeGenre(List<Genre> genres) {
+        for (Genre genre : genres) {
+            List<Film> films = genre.getGenresMovies();
+            films.remove(this);
+        }
+    }
+
+    public void removeCountry(List<Country> countries) {
+        for (Country country : countries) {
+            List<Film> films = country.getCountryMovies();
+            films.remove(this);
+        }
     }
 }

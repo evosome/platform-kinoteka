@@ -20,7 +20,7 @@ import java.util.List;
 @Tag(name = "Ticket", description = "The Ticket API")
 @RestController
 @RequestMapping("/api1/v1")
-@CrossOrigin
+@CrossOrigin(origins = "*", maxAge = 3600)
 public class TicketController {
     private TicketServices ticketServices;
     public TicketController(TicketServices ticketServices){this.ticketServices = ticketServices;}
