@@ -11,13 +11,19 @@ import java.util.List;
 @Entity
 @Table(name = "Country")
 public class Country {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long countryId;
+    private long id;
+
     private String countryName;
+
     private String countryCode;
+
     private String linkPhoto;
+
     @ManyToMany(cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Film> countryMovies = new ArrayList<>();
+
 }

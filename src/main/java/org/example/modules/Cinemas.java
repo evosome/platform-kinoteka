@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import jakarta.persistence.*;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,13 +13,18 @@ import java.util.List;
 @Entity
 @Table(name = "Cinemas")
 public class Cinemas {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long cinemasId;
+
     private String address;
+
     private String name;
+
     private String type;
-    @OneToMany(mappedBy = "cinemasFk",cascade = CascadeType.ALL,orphanRemoval = true)
+
+    @OneToMany(mappedBy = "cinemasFk", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Halls> halls = new ArrayList<>();
 
     public void addHalls(Halls hall) {
