@@ -18,7 +18,6 @@ import java.util.List;
 @Tag(name = "Producers", description = "The Producers API")
 @RestController
 @RequestMapping("/api1/v1")
-@CrossOrigin(origins = "*", maxAge = 3600)
 public class ProducerController {
     public static ProducerService producerService;
     @Autowired

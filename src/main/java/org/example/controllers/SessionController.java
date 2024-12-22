@@ -20,7 +20,6 @@ import java.util.List;
 @Tag(name = "Sessions", description = "The Sessions API")
 @RestController
 @RequestMapping("/api1/v1")
-@CrossOrigin(origins = "*", maxAge = 3600)
 public class SessionController {
     public static SessionService sessionService;
 

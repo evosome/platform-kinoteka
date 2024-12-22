@@ -23,7 +23,6 @@ import java.util.List;
 @Tag(name = "Feedback", description = "The Feedback API")
 @RestController
 @RequestMapping("/api1/v1")
-@CrossOrigin(origins = "*", maxAge = 3600)
 @AllArgsConstructor
 public class FeedbackController {
 

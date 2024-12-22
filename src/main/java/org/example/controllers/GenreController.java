@@ -18,7 +18,6 @@ import java.util.List;
 @Tag(name = "Genres", description = "The Genres API")
 @RestController
 @RequestMapping("/api1/v1")
-@CrossOrigin(origins = "*", maxAge = 3600)
 public class GenreController {
     private final GenreService genreService;
 
