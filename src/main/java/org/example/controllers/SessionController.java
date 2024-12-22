@@ -13,6 +13,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,7 +21,6 @@ import java.util.List;
 @Tag(name = "Sessions", description = "The Sessions API")
 @RestController
 @RequestMapping("/api1/v1")
-@CrossOrigin(origins = "*", maxAge = 3600)
 public class SessionController {
     public static SessionService sessionService;
 
@@ -75,5 +75,31 @@ public class SessionController {
     @GetMapping("/sessions/{id}")
     public Session getSessionById(@PathVariable Long id){
         return sessionService.getSessionById(id);
+    }
+    @Operation(summary = "Update session", tags = "sessions")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Updated session",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Session.class))),
+            @ApiResponse(responseCode = "404", description = "Session not found"),
+            @ApiResponse(responseCode = "400", description = "Bad Request - Invalid data"),
+            @ApiResponse(responseCode = "500", description = "Internal Server Error")
+    })
+    @PreAuthorize("hasRole('ADMIN')")
+    @PutMapping("/session/{id}")
+    public ResponseEntity<Session> updateSession(@PathVariable Long id, @RequestBody Session sessionDetails) {
+        Session existingSession = sessionService.getSessionById(id);
+
+        if (existingSession == null) {
+            return ResponseEntity.notFound().build();
+        }
+        existingSession.setDate(sessionDetails.getDate());
+        existingSession.setCinemaType(sessionDetails.getCinemaType());
+        existingSession.setHallsFk(sessionDetails.getHallsFk());
+        existingSession.setFilmFk(sessionDetails.getFilmFk());
+
+        Session updatedSession = sessionService.createSession(existingSession);
+
+        return ResponseEntity.ok(updatedSession);
     }
 }

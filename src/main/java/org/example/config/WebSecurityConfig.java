@@ -1,6 +1,6 @@
 package org.example.config;
 
-import jakarta.servlet.ServletException;
+import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.example.services.UserSessionService;
@@ -27,6 +27,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+import org.springframework.security.web.authentication.AuthenticationFilter;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
@@ -51,16 +52,6 @@ public class WebSecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
-                .cors(cors -> cors
-                        .configurationSource(request -> {
-                            var corsConfiguration = new CorsConfiguration();
-                            corsConfiguration.setAllowedOriginPatterns(List.of(""));
-                            corsConfiguration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-                            corsConfiguration.setAllowedHeaders(List.of(""));
-                            corsConfiguration.setAllowCredentials(true);
-                            return corsConfiguration;
-                        })
-                )
                 .httpBasic(Customizer.withDefaults())
                 .exceptionHandling(
                         httpSecurityExceptionHandlingConfigurer ->

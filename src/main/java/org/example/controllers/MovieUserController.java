@@ -21,7 +21,6 @@ import java.util.List;
 @Tag(name = "User", description = "The User API")
 @RestController
 @RequestMapping("/api1/v1")
-@CrossOrigin(origins = "*", maxAge = 3600)
 public class MovieUserController {
     public static MovieUserServices userService;
     @Autowired

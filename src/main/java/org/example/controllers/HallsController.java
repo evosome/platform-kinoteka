@@ -18,7 +18,6 @@ import java.util.List;
 @Tag(name = "Halls", description = "The Halls API")
 @RestController
 @RequestMapping("/api1/v1")
-@CrossOrigin(origins = "*", maxAge = 3600)
 public class HallsController {
     public static HallsService hallsService;
     @Autowired

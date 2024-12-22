@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api1/v1")
-@CrossOrigin(origins = "*", maxAge = 3600)
 @Tag(name = "Photo", description = "The Photo API")
 public class PhotoLinksController {
     public static PhotoLinksService photoLinksService;

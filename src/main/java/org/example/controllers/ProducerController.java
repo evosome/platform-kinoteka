@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,7 +19,6 @@ import java.util.List;
 @Tag(name = "Producers", description = "The Producers API")
 @RestController
 @RequestMapping("/api1/v1")
-@CrossOrigin(origins = "*", maxAge = 3600)
 public class ProducerController {
     public static ProducerService producerService;
     @Autowired
@@ -59,5 +59,35 @@ public class ProducerController {
     @GetMapping("/producer/{id}")
     public Producer getProducerById(@PathVariable Long id){
         return producerService.getProducerById(id);
+    }
+    @Operation(summary = "Update producer", tags = "producers")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Updated producer",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Producer.class))),
+            @ApiResponse(responseCode = "404", description = "Producer not found"),
+            @ApiResponse(responseCode = "400", description = "Bad Request - Invalid data"),
+            @ApiResponse(responseCode = "500", description = "Internal Server Error")
+    })
+    @PreAuthorize("hasRole('ADMIN')")
+    @PutMapping("/producers/{id}")
+    public ResponseEntity<Producer> updateProducer(@PathVariable Long id, @RequestBody Producer producerDetails) {
+        Producer existingProducer = producerService.getProducerById(id);
+
+        if (existingProducer == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        existingProducer.setName(producerDetails.getName());
+        existingProducer.setSurname(producerDetails.getSurname());
+
+        if (producerDetails.getDirectorsMovies() != null) {
+            existingProducer.getDirectorsMovies().clear();
+            existingProducer.getDirectorsMovies().addAll(producerDetails.getDirectorsMovies());
+        }
+
+        Producer updatedProducer = producerService.createProducer(existingProducer);
+
+        return ResponseEntity.ok(updatedProducer);
     }
 }

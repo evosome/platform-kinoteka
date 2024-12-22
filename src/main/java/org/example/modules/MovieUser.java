@@ -23,6 +23,7 @@ public class MovieUser implements UserDetails {
     private String email;
     private String username;
     private String telephoneNumber;
+    private String userImage;
     private String password;
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "ticketFk",cascade = CascadeType.ALL,orphanRemoval = true)
     private List<Ticket> moviesWatched = new ArrayList<>();

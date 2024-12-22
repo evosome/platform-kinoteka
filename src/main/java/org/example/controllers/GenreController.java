@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,7 +19,6 @@ import java.util.List;
 @Tag(name = "Genres", description = "The Genres API")
 @RestController
 @RequestMapping("/api1/v1")
-@CrossOrigin(origins = "*", maxAge = 3600)
 public class GenreController {
     private final GenreService genreService;
 
@@ -59,5 +59,31 @@ public class GenreController {
     @GetMapping("/genres/{id}")
     public Genre getGenreById(@PathVariable Long id) {
         return genreService.getGenreById(id);
+    }
+    @Operation(summary = "Update genre", tags = "genres")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Updated genre",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Genre.class))),
+            @ApiResponse(responseCode = "404", description = "Genre not found"),
+            @ApiResponse(responseCode = "400", description = "Bad Request - Invalid data"),
+            @ApiResponse(responseCode = "500", description = "Internal Server Error")
+    })
+    @PreAuthorize("hasRole('ADMIN')")
+    @PutMapping("/genres/{id}")
+    public ResponseEntity<Genre> updateGenre(@PathVariable Long id, @RequestBody Genre genreDetails) {
+        Genre existingGenre = genreService.getGenreById(id);
+
+        if (existingGenre == null) {
+            return ResponseEntity.notFound().build();
+        }
+        existingGenre.setGenreName(genreDetails.getGenreName());
+        if (genreDetails.getGenresMovies() != null) {
+            existingGenre.getGenresMovies().clear();
+            existingGenre.getGenresMovies().addAll(genreDetails.getGenresMovies());
+        }
+        Genre updatedGenre = genreService.createGenre(existingGenre);
+
+        return ResponseEntity.ok(updatedGenre);
     }
 }

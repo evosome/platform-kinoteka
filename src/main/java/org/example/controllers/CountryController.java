@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,7 +19,6 @@ import java.util.List;
 @Tag(name = "Countries", description = "The Countries API")
 @RestController
 @RequestMapping("/api1/v1")
-@CrossOrigin(origins = "*", maxAge = 3600)
 public class CountryController {
     private final CountryService countryService;
 
@@ -59,5 +59,31 @@ public class CountryController {
     @GetMapping("/countries/{id}")
     public Country getCountryById(@PathVariable Long id) {
         return countryService.getCountryById(id);
+    }
+    @Operation(summary = "Update country", tags = "countries")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Updated country",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Country.class))),
+            @ApiResponse(responseCode = "404", description = "Country not found"),
+            @ApiResponse(responseCode = "400", description = "Bad Request - Invalid data"),
+            @ApiResponse(responseCode = "500", description = "Internal Server Error")
+    })
+    @PreAuthorize("hasRole('ADMIN')")
+    @PutMapping("/countries/{id}")
+    public ResponseEntity<Country> updateCountry(@PathVariable Long id, @RequestBody Country countryDetails) {
+        Country existingCountry = countryService.getCountryById(id);
+        if (existingCountry == null) {
+            return ResponseEntity.notFound().build();
+        }
+        existingCountry.setCountryName(countryDetails.getCountryName());
+        existingCountry.setCountryCode(countryDetails.getCountryCode());
+        existingCountry.setLinkPhoto(countryDetails.getLinkPhoto());
+        if (countryDetails.getCountryMovies() != null) {
+            existingCountry.getCountryMovies().clear();
+            existingCountry.getCountryMovies().addAll(countryDetails.getCountryMovies());
+        }
+        Country updatedCountry = countryService.createCountry(existingCountry);
+        return ResponseEntity.ok(updatedCountry);
     }
 }

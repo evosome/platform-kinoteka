@@ -16,6 +16,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.example.services.FilmServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,7 +24,6 @@ import java.util.List;
 @Tag(name = "Feedback", description = "The Feedback API")
 @RestController
 @RequestMapping("/api1/v1")
-@CrossOrigin(origins = "*", maxAge = 3600)
 @AllArgsConstructor
 public class FeedbackController {
 
@@ -77,7 +77,7 @@ public class FeedbackController {
     })
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/feedback/{userId},{filmId},{feedbackId}")
-    public void deleteTicket(@PathVariable long userId,@PathVariable long filmId,@PathVariable long feedbackId){
+    public void deleteFeedback(@PathVariable long userId,@PathVariable long filmId,@PathVariable long feedbackId){
         Film film = filmServices.getFilmById(filmId);
         List<Feedback> feedbacks = film.getFeedbacks();
         feedbacks.removeIf(feedback -> feedback.getFeedbackId() == feedbackId);
@@ -85,5 +85,27 @@ public class FeedbackController {
         List<Feedback> feedbacks1 = movieUser.getFeedbacks();
         feedbacks1.removeIf(feedback -> feedback.getFeedbackId() == feedbackId);
         feedbackServices.deleteFeedbackById(feedbackId);
+    }
+    @Operation(summary = "Update feedback", tags = "feedback")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Updated feedback",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Feedback.class))),
+            @ApiResponse(responseCode = "404", description = "Feedback not found"),
+            @ApiResponse(responseCode = "400", description = "Bad Request - Invalid data"),
+            @ApiResponse(responseCode = "500", description = "Internal Server Error")
+    })
+    @PreAuthorize("hasRole('USER')") // Если только пользователи могут обновлять свои отзывы
+    @PutMapping("/feedback/{id}")
+    public ResponseEntity<Feedback> updateFeedback(@PathVariable Long id, @RequestBody Feedback feedbackDetails) {
+        Feedback existingFeedback = feedbackServices.getFeedbackById(id);
+        if (existingFeedback == null) {
+            return ResponseEntity.notFound().build();
+        }
+        existingFeedback.setFeedbackText(feedbackDetails.getFeedbackText());
+        existingFeedback.setMovieUserFk(feedbackDetails.getMovieUserFk());
+        existingFeedback.setFilmFk(feedbackDetails.getFilmFk());
+        Feedback updatedFeedback = feedbackServices.createFeedback(existingFeedback);
+        return ResponseEntity.ok(updatedFeedback);
     }
 }
