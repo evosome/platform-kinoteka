@@ -37,9 +37,14 @@ public class FilmController {
     })
     @GetMapping("/film")
     public Page<Film> getFilm(
-        @RequestParam(defaultValue = "0") int page,
-        @RequestParam(defaultValue = "10") int size) {
-            return filmServices.getAllFilm(page, size);
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(required = false) List<String> genreNames,
+            @RequestParam(required = false) List<String> countryNames,
+            @RequestParam(required = false) String title,
+            @RequestParam(required = false) Integer ageRestriction,
+            @RequestParam(required = false) Long hallId) {
+        return filmServices.getAllFilm(page, size, genreNames, countryNames, title, ageRestriction, hallId);
     }
     @Operation(summary = "Create new film", tags = "films")
     @ApiResponses(value = {

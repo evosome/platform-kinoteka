@@ -25,6 +25,7 @@ public class Film {
     private String title;
     private int year;
     private int duration;
+    private int ageRestriction;
     public String cover;
     @OneToMany(mappedBy = "filmFk",cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Feedback> feedbacks = new ArrayList<>();
