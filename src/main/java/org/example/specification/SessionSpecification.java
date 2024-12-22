@@ -33,10 +33,16 @@ public class SessionSpecification {
             return criteriaBuilder.equal(root.get("hallsFk").get("sessionId"), hallId);
         };
     }
-
+    public static Specification<Session> sortByDate() {
+        return (root, query, criteriaBuilder) -> {
+            query.orderBy(criteriaBuilder.asc(root.get("date")));
+            return criteriaBuilder.conjunction();
+        };
+    }
     public static Specification<Session> combineFilters(String date, String cinemaType, Long hallId) {
         return Specification.where(filterByDate(date))
                 .and(filterByCinemaType(cinemaType))
-                .and(filterByHallId(hallId));
+                .and(filterByHallId(hallId))
+                .and(sortByDate()); 
     }
 }

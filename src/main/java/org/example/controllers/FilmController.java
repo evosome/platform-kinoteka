@@ -42,8 +42,9 @@ public class FilmController {
             @RequestParam(required = false) List<String> countryNames,
             @RequestParam(required = false) String title,
             @RequestParam(required = false) Integer ageRestriction,
-            @RequestParam(required = false) Long hallId) {
-        return filmServices.getAllFilm(page, size, genreNames, countryNames, title, ageRestriction, hallId);
+            @RequestParam(required = false) Long hallId,
+            @RequestParam(required = false) List<String> directorNames) {
+        return filmServices.getAllFilm(page, size, genreNames, countryNames, title, ageRestriction, hallId, directorNames);
     }
     @Operation(summary = "Create new film", tags = "films")
     @ApiResponses(value = {

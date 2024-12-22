@@ -6,6 +6,7 @@ import org.example.repositories.SessionRepository;
 import org.example.specification.SessionSpecification;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import jakarta.persistence.*;
 import java.util.List;
@@ -15,8 +16,9 @@ public class SessionService {
     public SessionService(SessionRepository sessionRepository) {
         this.sessionRepository = sessionRepository;
     }
-    public Page<Session> getAllSession(int page, int size, String date, String cinemaType, Long hallId) {
-        return sessionRepository.findAll(SessionSpecification.combineFilters(date, cinemaType, hallId), PageRequest.of(page, size));
+    public Page<Session> getAllSession(int page, int size, String date, String cinemaType, Long hallId, Sort sort) {
+        return sessionRepository.findAll(SessionSpecification.combineFilters(date, cinemaType, hallId),
+                PageRequest.of(page, size, sort));
     }
     public Session createSession(Session session){
         return sessionRepository.save(session);

@@ -13,6 +13,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -44,8 +45,10 @@ public class SessionController {
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(required = false) String date,
             @RequestParam(required = false) String cinemaType,
-            @RequestParam(required = false) Long hallId) {
-        return sessionService.getAllSession(page, size, date, cinemaType, hallId);
+            @RequestParam(required = false) Long hallId,
+            @RequestParam(defaultValue = "asc") String sortOrder) {
+        Sort sort = sortOrder.equalsIgnoreCase("desc") ? Sort.by("date").descending() : Sort.by("date").ascending();
+        return sessionService.getAllSession(page, size, date, cinemaType, hallId, sort);
     }
     @Operation(summary = "Create new session", tags = "sessions")
     @ApiResponses(value = {

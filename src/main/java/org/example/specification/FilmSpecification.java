@@ -14,7 +14,14 @@ public class FilmSpecification {
             return root.join("genres").get("genreName").in(genreNames);
         };
     }
-
+    public static Specification<Film> filterByDirectorNames(List<String> directorNames) {
+        return (root, query, criteriaBuilder) -> {
+            if (directorNames == null || directorNames.isEmpty()) {
+                return criteriaBuilder.conjunction();
+            }
+            return root.join("producers").get("name").in(directorNames);
+        };
+    }
     public static Specification<Film> filterByCountry(List<String> countryNames) {
         return (root, query, criteriaBuilder) -> {
             if (countryNames == null || countryNames.isEmpty()) {
@@ -51,11 +58,17 @@ public class FilmSpecification {
         };
     }
 
-    public static Specification<Film> combineFilters(List<String> genreNames, List<String> countryNames, String title, Integer ageRestriction, Long hallId) {
+    public static Specification<Film> combineFilters(List<String> genreNames,
+                                                     List<String> countryNames,
+                                                     String title,
+                                                     Integer ageRestriction,
+                                                     Long hallId,
+                                                     List<String> directorNames) {
         return Specification.where(filterByGenres(genreNames))
                 .and(filterByCountry(countryNames))
                 .and(filterByTitle(title))
                 .and(filterByAgeRestriction(ageRestriction))
-                .and(filterBySessionHallId(hallId));
+                .and(filterBySessionHallId(hallId))
+                .and(filterByDirectorNames(directorNames));
     }
 }
