@@ -39,6 +39,7 @@ public class Film {
     @ManyToMany(mappedBy = "countryMovies", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private List<Country> countries = new ArrayList<>();
     @OneToMany
+    @JsonIgnore
     private List<Session> sessions = new ArrayList<>();
     @OneToMany
     private List<PhotoLinks> links = new ArrayList<>();

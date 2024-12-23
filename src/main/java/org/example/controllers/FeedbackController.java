@@ -49,7 +49,7 @@ public class FeedbackController {
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = Feedback.class)))
     })
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("isAuthenticated()")
     @PostMapping("/feedback/{userId},{filmId}")
     public Feedback createFeedback(@PathVariable long userId,@PathVariable long filmId,@RequestBody Feedback feedback){
         Film film = filmServices.getFilmById(filmId);
@@ -75,7 +75,7 @@ public class FeedbackController {
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = Feedback.class)))
     })
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("isAuthenticated()")
     @DeleteMapping("/feedback/{userId},{filmId},{feedbackId}")
     public void deleteFeedback(@PathVariable long userId,@PathVariable long filmId,@PathVariable long feedbackId){
         Film film = filmServices.getFilmById(filmId);
@@ -95,7 +95,7 @@ public class FeedbackController {
             @ApiResponse(responseCode = "400", description = "Bad Request - Invalid data"),
             @ApiResponse(responseCode = "500", description = "Internal Server Error")
     })
-    @PreAuthorize("hasRole('USER')") // Если только пользователи могут обновлять свои отзывы
+    @PreAuthorize("isAuthenticated()")
     @PutMapping("/feedback/{id}")
     public ResponseEntity<Feedback> updateFeedback(@PathVariable Long id, @RequestBody Feedback feedbackDetails) {
         Feedback existingFeedback = feedbackServices.getFeedbackById(id);

@@ -28,6 +28,7 @@ public class MovieUser implements UserDetails {
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "ticketFk",cascade = CascadeType.ALL,orphanRemoval = true)
     private List<Ticket> moviesWatched = new ArrayList<>();
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "movieUserFk",cascade = CascadeType.ALL,orphanRemoval = true)
+    @JsonIgnore
     private List<Feedback> feedbacks = new ArrayList<>();
     @ManyToMany(fetch = FetchType.EAGER)
     private Set<Role> roles;

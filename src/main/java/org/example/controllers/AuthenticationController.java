@@ -52,7 +52,7 @@ public class AuthenticationController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@ModelAttribute("movieUser") MovieUser movieUser) {
+    public ResponseEntity<?> register(@RequestBody MovieUser movieUser) {
 
         movieUser.setPassword(passwordEncoder.encode(movieUser.getPassword()));
         userService.createUser(movieUser);

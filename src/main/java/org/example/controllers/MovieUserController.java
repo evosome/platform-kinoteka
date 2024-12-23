@@ -96,7 +96,38 @@ public class MovieUserController {
     public MovieUser getMovieUserById(@PathVariable long id){
         return userService.getUserById(id);
     }
-
+    @Operation(summary = "Update user by id", tags = "user")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "User updated successfully",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = MovieUser.class))
+                    }),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "User not found",
+                    content = @Content)
+    })
+    @PutMapping("/movieUser/{id}")
+    public ResponseEntity<MovieUser> updateMovieUser(@PathVariable Long id, @RequestBody MovieUser updatedUser) {
+        if (updatedUser.getPassword().length() < 4 || updatedUser.getPassword().length() > 12 ||
+                updatedUser.getUsername().length() < 4 || updatedUser.getUsername().length() > 12) {
+            return ResponseEntity.badRequest().body(null);
+        }
+        MovieUser existingUser = userService.getUserById(id);
+        existingUser.setName(updatedUser.getName());
+        existingUser.setSurName(updatedUser.getSurName());
+        existingUser.setEmail(updatedUser.getEmail());
+        existingUser.setUsername(updatedUser.getUsername());
+        existingUser.setTelephoneNumber(updatedUser.getTelephoneNumber());
+        existingUser.setPassword(updatedUser.getPassword());
+        existingUser.setRoles(updatedUser.getRoles());
+        userService.createUser(existingUser);
+        return ResponseEntity.ok(existingUser);
+    }
     @PreAuthorize("isFullyAuthenticated()")
     @GetMapping("/movieUser/me")
     public MovieUser getCurrentMovieUser(

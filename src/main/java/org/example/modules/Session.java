@@ -17,6 +17,7 @@ public class Session {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long sessionId;
     private String date;
+    private String timeLine;
     private String cinemaType;
     @ManyToOne(cascade = CascadeType.ALL)
     @JsonIgnore
@@ -25,7 +26,6 @@ public class Session {
     @JsonIgnore
     private List<Ticket> tickets = new ArrayList<>();
     @ManyToOne
-    @JsonIgnore
     private Film filmFk;
     public void addTicket(Ticket ticket) {
         tickets.add(ticket);
