@@ -19,8 +19,9 @@ public class Session {
     private String date;
     private String timeLine;
     private String cinemaType;
+    @Column(columnDefinition = "Integer default 0")
+    private int price;
     @ManyToOne(cascade = CascadeType.ALL)
-    @JsonIgnore
     private Halls hallsFk;
     @OneToMany(mappedBy = "ticket",cascade = CascadeType.ALL,orphanRemoval = true)
     @JsonIgnore

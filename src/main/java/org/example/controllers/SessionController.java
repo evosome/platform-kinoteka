@@ -40,15 +40,13 @@ public class SessionController {
                             array = @ArraySchema(schema = @Schema(implementation = Session.class))))
     })
     @GetMapping("/session")
-    public Page<Session> getCinemaSession(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,
+    public List<Session> getCinemaSession(
             @RequestParam(required = false) String date,
             @RequestParam(required = false) String cinemaType,
             @RequestParam(required = false) Long hallId,
             @RequestParam(defaultValue = "asc") String sortOrder) {
         Sort sort = sortOrder.equalsIgnoreCase("desc") ? Sort.by("date").descending() : Sort.by("date").ascending();
-        return sessionService.getAllSession(page, size, date, cinemaType, hallId, sort);
+        return sessionService.getAllSession(date, cinemaType, hallId, sort);
     }
     @Operation(summary = "Create new session", tags = "sessions")
     @ApiResponses(value = {
@@ -100,9 +98,23 @@ public class SessionController {
         existingSession.setCinemaType(sessionDetails.getCinemaType());
         existingSession.setHallsFk(sessionDetails.getHallsFk());
         existingSession.setFilmFk(sessionDetails.getFilmFk());
+        existingSession.setPrice(sessionDetails.getPrice());
 
         Session updatedSession = sessionService.createSession(existingSession);
 
         return ResponseEntity.ok(updatedSession);
+    }
+    @Operation(summary = "Delete session by id", tags = "sessions")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Session deleted successfully"),
+            @ApiResponse(responseCode = "404", description = "Session not found")
+    })
+    @PreAuthorize("hasRole('ADMIN')")
+    @DeleteMapping("/session/{id}")
+    public void deleteSession(@PathVariable Long id) {
+        Session session = sessionService.getSessionById(id);
+        session.setHallsFk(null);
+        session.setFilmFk(null);
+        sessionService.deleteSession(id);
     }
 }

@@ -20,6 +20,7 @@ public class Halls {
     private int quantityPlace;
     private int maketId;
     @OneToMany
+    @JsonIgnore
     private List<Session> sessions = new ArrayList<>();
     @ManyToOne
     @JsonIgnore

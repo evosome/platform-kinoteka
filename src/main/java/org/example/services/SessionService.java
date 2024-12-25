@@ -16,14 +16,13 @@ public class SessionService {
     public SessionService(SessionRepository sessionRepository) {
         this.sessionRepository = sessionRepository;
     }
-    public Page<Session> getAllSession(int page, int size, String date, String cinemaType, Long hallId, Sort sort) {
-        return sessionRepository.findAll(SessionSpecification.combineFilters(date, cinemaType, hallId),
-                PageRequest.of(page, size, sort));
+    public List<Session> getAllSession(String date, String cinemaType, Long hallId, Sort sort) {
+        return sessionRepository.findAll(SessionSpecification.combineFilters(date, cinemaType, hallId), sort);
     }
     public Session createSession(Session session){
         return sessionRepository.save(session);
     }
-    public void deleteSessionById(long id){
+    public void deleteSession(Long id) {
         sessionRepository.deleteById(id);
     }
     public Session getSessionById(long cinemaSessionId) {
