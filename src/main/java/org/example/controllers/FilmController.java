@@ -84,20 +84,21 @@ public class FilmController {
     @DeleteMapping("/film/{filmId}")
     public void deleteFilm(@PathVariable long filmId) {
         Film film = filmServices.getFilmById(filmId);
-        List<Feedback> feedbacks = new ArrayList<>(film.getFeedbacks());
-        for (Feedback feedback : feedbacks) {
-            film.removeFeedback(feedback);
+        List<Feedback> feedbacksToDelete = new ArrayList<>(film.getFeedbacks());
+        for (Feedback feedback : feedbacksToDelete) {
+            feedbackService.deleteFeedbackById(feedback.getFeedbackId());
         }
-        List<PhotoLinks> links = new ArrayList<>(film.getLinks());
-        for (PhotoLinks link : links) {
+        List<Session> sessionsToRemove = new ArrayList<>(film.getSessions());
+        for (Session session : sessionsToRemove) {
+            SessionController.sessionService.deleteSession(session.getSessionId());
+        }
+        for (PhotoLinks link : new ArrayList<>(film.getLinks())) {
             film.removeLinks(link);
+            //PhotoLinksController.photoLinksService.deleteLinkById(link.getId());
         }
-        List<Genre> genres = film.getGenres();
-        film.removeGenre(genres);
-        List<Producer> producers = film.getProducers();
-        film.removeProducer(producers);
-        List<Country> countries = film.getCountries();
-        film.removeCountry(countries);
+        film.removeGenre(new ArrayList<>(film.getGenres()));
+        film.removeProducer(new ArrayList<>(film.getProducers()));
+        film.removeCountry(new ArrayList<>(film.getCountries()));
         filmServices.deleteFilmById(filmId);
     }
     @PutMapping("/film/{filmId}")

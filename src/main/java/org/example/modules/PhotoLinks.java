@@ -16,6 +16,6 @@ public class PhotoLinks {
     private long id;
     @ManyToOne
     @JsonIgnore
-    private Film film;
+    private Film filmFromLink;
     private String link;
 }

@@ -38,10 +38,10 @@ public class Film {
     private List<Genre> genres = new ArrayList<>();
     @ManyToMany(mappedBy = "countryMovies", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private List<Country> countries = new ArrayList<>();
-    @OneToMany
+    @OneToMany(mappedBy = "filmFromSession",cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
     private List<Session> sessions = new ArrayList<>();
-    @OneToMany(mappedBy = "film",cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "filmFromLink",cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PhotoLinks> links = new ArrayList<>();
 
     public void addProducer(Film film) {
@@ -68,12 +68,12 @@ public class Film {
     }
     public void addSession(Session session) {
       sessions.add(session);
-      session.setFilmFk(this);
+      session.setFilmFromSession(this);
 
     }
-    public void deleteFilm(Session session){
+    public void deleteSession(Session session){
        sessions.remove(session);
-       session.setFilmFk(null);
+       session.setFilmFromSession(null);
     }
     public void addFeedback(Feedback feedback) {
         feedbacks.add(feedback);
@@ -81,7 +81,7 @@ public class Film {
     }
     public void addLinks(PhotoLinks link) {
         links.add(link);
-        link.setFilm(this);
+        link.setFilmFromLink(this);
     }
     public void removeProducer(List<Producer> producers) {
        for (Producer producer : producers) {
@@ -109,6 +109,6 @@ public class Film {
     }
     public void removeLinks(PhotoLinks link){
         links.remove(link);
-        link.setFilm(null);
+        link.setFilmFromLink(null);
     }
 }

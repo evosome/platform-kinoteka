@@ -95,7 +95,7 @@ public class SessionController {
         existingSession.setDate(sessionDetails.getDate());
         existingSession.setCinemaType(sessionDetails.getCinemaType());
         existingSession.setHallsFk(sessionDetails.getHallsFk());
-        existingSession.setFilmFk(sessionDetails.getFilmFk());
+        existingSession.setFilmFromSession(sessionDetails.getFilmFromSession());
         existingSession.setPrice(sessionDetails.getPrice());
 
         Session updatedSession = sessionService.createSession(existingSession);
@@ -112,8 +112,8 @@ public class SessionController {
         Session session = sessionService.getSessionById(id);
         Halls hall = session.getHallsFk();
         hall.deleteSession(session);
-        Film film = session.getFilmFk();
-        film.deleteFilm(session);
+        Film film = session.getFilmFromSession();
+        film.deleteSession(session);
         sessionService.deleteSession(id);
     }
     @GetMapping("/hall/{hallId}/session/{sessionId}/occupied-seats")

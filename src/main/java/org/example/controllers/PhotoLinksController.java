@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.example.modules.Feedback;
 import org.example.modules.Film;
 import org.example.modules.PhotoLinks;
 import org.example.services.FilmServices;
@@ -16,6 +17,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api1/v1")
@@ -69,23 +72,6 @@ public class PhotoLinksController {
         return photoLink;
     }
 
-    @Operation(summary = "Delete photo link by id", tags = "photo")
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "Delete photo link",
-                    content = {
-                            @Content(
-                                    mediaType = "application/json",
-                                    schema = @Schema(implementation = PhotoLinks.class))
-                    })
-    })
-    @PreAuthorize("hasRole('ADMIN')")
-    @DeleteMapping("/photoLinks/{id}")
-    public void deletePhotoLinkById(@PathVariable Long id) {
-        photoLinksService.deleteLinkById(id);
-    }
-
     @Operation(summary = "Get photo link by id", tags = "photo")
     @ApiResponses(value = {
             @ApiResponse(
@@ -100,5 +86,24 @@ public class PhotoLinksController {
     @GetMapping("/photoLinks/{id}")
     public PhotoLinks getPhotoLinkById(@PathVariable long id) {
         return photoLinksService.getLinkById(id);
+    }
+
+    @Operation(summary = "Delete photo link by id", tags = "photo")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Delete photo link",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = PhotoLinks.class))
+                    })
+    })
+    @DeleteMapping("/photoLinks/{id},{filmId}")
+    public void deletePhotoLinkById(@PathVariable Long id,@PathVariable long filmId) {
+        Film film = filmServices.getFilmById(filmId);
+        List<PhotoLinks> links = film.getLinks();
+        links.removeIf(feedback -> feedback.getId() == id);
+        photoLinksService.deleteLinkById(id);
     }
 }

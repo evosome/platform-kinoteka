@@ -27,7 +27,7 @@ public class Session {
     @JsonIgnore
     private List<Ticket> tickets = new ArrayList<>();
     @ManyToOne
-    private Film filmFk;
+    private Film filmFromSession;
     public void addTicket(Ticket ticket) {
         tickets.add(ticket);
         ticket.setTicket(this);
