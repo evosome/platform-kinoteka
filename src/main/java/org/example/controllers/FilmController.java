@@ -17,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 @Tag(name = "Films", description = "The Films API")
 @RestController
@@ -83,6 +84,14 @@ public class FilmController {
     @DeleteMapping("/film/{filmId}")
     public void deleteFilm(@PathVariable long filmId) {
         Film film = filmServices.getFilmById(filmId);
+        List<Feedback> feedbacks = new ArrayList<>(film.getFeedbacks());
+        for (Feedback feedback : feedbacks) {
+            film.removeFeedback(feedback);
+        }
+        List<PhotoLinks> links = new ArrayList<>(film.getLinks());
+        for (PhotoLinks link : links) {
+            film.removeLinks(link);
+        }
         List<Genre> genres = film.getGenres();
         film.removeGenre(genres);
         List<Producer> producers = film.getProducers();

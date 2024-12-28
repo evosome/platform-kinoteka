@@ -116,4 +116,9 @@ public class SessionController {
         film.deleteFilm(session);
         sessionService.deleteSession(id);
     }
+    @GetMapping("/hall/{hallId}/session/{sessionId}/occupied-seats")
+    public ResponseEntity<List<Ticket>> getOccupiedSeats(@PathVariable Long hallId, @PathVariable Long sessionId) {
+        List<Ticket> occupiedSeats = sessionService.getOccupiedSeats(sessionId);
+        return ResponseEntity.ok(occupiedSeats);
+    }
 }

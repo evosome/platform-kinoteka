@@ -1,6 +1,7 @@
 package org.example.controllers;
 
 import org.example.modules.*;
+import org.example.services.HallLayoutService;
 import org.example.services.HallsService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -61,12 +62,15 @@ public class HallsController {
     public Halls getHallsById(@PathVariable Long id){
         return hallsService.getHallsById(id);
     }
-    @DeleteMapping("/hall/{id")
+    @DeleteMapping("/hall/{id}")
     public void deleteHall(@PathVariable Long id) {
-       Halls hall = hallsService.getHallsById(id);
-       Cinemas cinemas = hall.getCinemasFk();
+        Halls hall = hallsService.getHallsById(id);
+        Cinemas cinemas = hall.getCinemasFk();
         cinemas.deleteHalls(hall);
+        HallLayout hallLayout = hall.getHallLayout();
+        if (hallLayout != null) {
+            HallLayoutController.hallLayoutService.deleteHallLaysById(hallLayout.getId());
+        }
         hallsService.deleteHallsById(id);
-
     }
 }

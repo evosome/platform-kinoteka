@@ -12,12 +12,17 @@ import jakarta.persistence.*;
 import java.util.List;
 @Service
 public class SessionService {
-    public SessionRepository sessionRepository;
+    public static SessionRepository sessionRepository;
     public SessionService(SessionRepository sessionRepository) {
-        this.sessionRepository = sessionRepository;
+        SessionService.sessionRepository = sessionRepository;
     }
     public List<Session> getAllSession(String date, String cinemaType, Long hallId, Sort sort) {
         return sessionRepository.findAll(SessionSpecification.combineFilters(date, cinemaType, hallId), sort);
+    }
+    public List<Ticket> getOccupiedSeats(long sessionId) {
+        Session session = sessionRepository.findById(sessionId)
+                .orElseThrow(() -> new RuntimeException("Session not found"));
+        return session.getTickets();
     }
     public Session createSession(Session session){
         return sessionRepository.save(session);

@@ -105,6 +105,7 @@ public class FeedbackController {
         existingFeedback.setFeedbackText(feedbackDetails.getFeedbackText());
         existingFeedback.setMovieUserFk(feedbackDetails.getMovieUserFk());
         existingFeedback.setFilmFk(feedbackDetails.getFilmFk());
+        existingFeedback.setCreatedDate(feedbackDetails.getCreatedDate());
         Feedback updatedFeedback = feedbackServices.createFeedback(existingFeedback);
         return ResponseEntity.ok(updatedFeedback);
     }

@@ -41,7 +41,7 @@ public class Film {
     @OneToMany
     @JsonIgnore
     private List<Session> sessions = new ArrayList<>();
-    @OneToMany
+    @OneToMany(mappedBy = "film",cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PhotoLinks> links = new ArrayList<>();
 
     public void addProducer(Film film) {
@@ -102,5 +102,13 @@ public class Film {
             List<Film> films = country.getCountryMovies();
             films.remove(this);
         }
+    }
+    public void removeFeedback(Feedback feedback) {
+        feedbacks.remove(feedback);
+        feedback.setFilmFk(null);
+    }
+    public void removeLinks(PhotoLinks link){
+        links.remove(link);
+        link.setFilm(null);
     }
 }

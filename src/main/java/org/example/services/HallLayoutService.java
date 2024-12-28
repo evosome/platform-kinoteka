@@ -20,6 +20,9 @@ public class HallLayoutService {
     public Page<HallLayout> getAllHallLayout(int page, int size){
         return hallLayoutRepository.findAll(PageRequest.of(page, size));
     }
+    public void deleteHallLaysById(long id){
+        hallLayoutRepository.deleteById(id);
+    }
     public HallLayout createHallLayout(HallLayout layId){
         return hallLayoutRepository.save(layId);
     }

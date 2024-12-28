@@ -86,7 +86,7 @@ public class GenreController {
 
         return ResponseEntity.ok(updatedGenre);
     }
-    @DeleteMapping("/genre/{id")
+    @DeleteMapping("/genre/{id}")
     public void deleteGenre(@PathVariable Long id) {
         Genre genre = genreService.getGenreById(id);
         List<Film> films = genre.getGenresMovies();

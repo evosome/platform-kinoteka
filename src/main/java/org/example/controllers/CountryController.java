@@ -86,7 +86,7 @@ public class CountryController {
         Country updatedCountry = countryService.createCountry(existingCountry);
         return ResponseEntity.ok(updatedCountry);
     }
-    @DeleteMapping("/countries/{id")
+    @DeleteMapping("/countries/{id}")
     public void deleteCountry(@PathVariable Long id) {
         Country country = countryService.getCountryById(id);
         List<Film> films = country.getCountryMovies();

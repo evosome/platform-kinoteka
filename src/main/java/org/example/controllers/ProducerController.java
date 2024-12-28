@@ -91,7 +91,7 @@ public class ProducerController {
 
         return ResponseEntity.ok(updatedProducer);
     }
-    @DeleteMapping("/producers/{id")
+    @DeleteMapping("/producers/{id}")
     public void deleteProducer(@PathVariable Long id) {
        Producer producer = producerService.getProducerById(id);
        List<Film> films = producer.getDirectorsMovies();

@@ -20,9 +20,6 @@ public class CinemasService {
     public Page<Cinemas> getAllCinemas(int page, int size){
         return cinemasRepository.findAll(PageRequest.of(page, size));
     }
-//    public List<Cinemas> getAllCinemas(){
-//        return cinemasRepository.findAll();
-//    }
     public Cinemas createCinemas(Cinemas cinemas){
         return cinemasRepository.save(cinemas);
     }

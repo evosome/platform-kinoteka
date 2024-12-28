@@ -49,9 +49,10 @@ public class TicketController {
         movieUser.addSession(ticket);
         Session session = SessionController.sessionService.getSessionById(sessionId);
         session.addTicket(ticket);
-        ticketServices.createCinemaSession(ticket);
+        ticketServices.createTicket(sessionId,ticket);
         return ticket;
     }
+
     @Operation(summary = "Delete ticket by id", tags = "tickets")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "Ticket deleted"),
@@ -66,7 +67,7 @@ public class TicketController {
         Session session = SessionController.sessionService.getSessionById(id);
         List<Ticket> tickets1 = session.getTickets();
         tickets1.removeIf(ticket -> ticket.getTicketId() == id);
-        ticketServices.deleteSessionById(id);
+        ticketServices.deleteTicketById(id);
     }
     @Operation(summary = "Get ticket by id", tags = "tickets")
     @ApiResponses(value = {
@@ -77,7 +78,7 @@ public class TicketController {
     })
     @GetMapping("/ticket/{id}")
     public Ticket getTicketById(@PathVariable long id){
-        Ticket ticket = ticketServices.getCinemaSessionById(id);
+        Ticket ticket = ticketServices.getTicketById(id);
         return ticket;
     }
 }
