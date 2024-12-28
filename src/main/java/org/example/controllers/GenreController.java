@@ -1,6 +1,8 @@
 package org.example.controllers;
 
+import org.example.modules.Film;
 import org.example.modules.Genre;
+import org.example.modules.Producer;
 import org.example.services.GenreService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -44,7 +46,6 @@ public class GenreController {
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = Genre.class)))
     })
-    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/genres")
     public Genre createGenre(@RequestBody Genre genre) {
         return genreService.createGenre(genre);
@@ -69,7 +70,6 @@ public class GenreController {
             @ApiResponse(responseCode = "400", description = "Bad Request - Invalid data"),
             @ApiResponse(responseCode = "500", description = "Internal Server Error")
     })
-    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/genres/{id}")
     public ResponseEntity<Genre> updateGenre(@PathVariable Long id, @RequestBody Genre genreDetails) {
         Genre existingGenre = genreService.getGenreById(id);
@@ -85,5 +85,13 @@ public class GenreController {
         Genre updatedGenre = genreService.createGenre(existingGenre);
 
         return ResponseEntity.ok(updatedGenre);
+    }
+    @DeleteMapping("/genre/{id")
+    public void deleteGenre(@PathVariable Long id) {
+        Genre genre = genreService.getGenreById(id);
+        List<Film> films = genre.getGenresMovies();
+        genre.removeFilm(films);
+        genreService.deleteGenre(id);
+
     }
 }

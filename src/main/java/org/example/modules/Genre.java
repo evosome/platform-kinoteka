@@ -18,4 +18,10 @@ public class Genre {
     @ManyToMany(cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Film> genresMovies = new ArrayList<>();
+    public void removeFilm(List<Film> films) {
+        for(Film film : films) {
+            List<Genre> genres = film.getGenres();
+            genres.remove(this);
+        }
+    }
 }

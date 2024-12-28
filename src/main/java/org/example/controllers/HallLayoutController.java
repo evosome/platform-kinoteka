@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -52,7 +53,6 @@ public class HallLayoutController {
                                     schema = @Schema(implementation = HallLayout.class))
                     })
     })
-    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/lay")
     public HallLayout createHalls(@RequestBody HallLayout lay){
         hallLayoutService.createHallLayout(lay);
@@ -72,5 +72,18 @@ public class HallLayoutController {
     @GetMapping("/lay/{id}")
     public HallLayout getHallsById(@PathVariable Long id){
         return hallLayoutService.getHallLayoutById(id);
+    }
+    @PutMapping("/lay/{id}")
+    public ResponseEntity<HallLayout> updateHallLayout(@PathVariable Long id, @RequestBody HallLayout hallLayoutDetails) {
+        HallLayout existingHallLayout = hallLayoutService.getHallLayoutById(id);
+        if (existingHallLayout == null) {
+            return ResponseEntity.notFound().build();
+        }
+        existingHallLayout.setLinkToLayout(hallLayoutDetails.getLinkToLayout());
+        if (hallLayoutDetails.getHall() != null) {
+            existingHallLayout.setHall(hallLayoutDetails.getHall());
+        }
+        HallLayout updatedHallLayout = hallLayoutService.createHallLayout(existingHallLayout);
+        return ResponseEntity.ok(updatedHallLayout);
     }
 }

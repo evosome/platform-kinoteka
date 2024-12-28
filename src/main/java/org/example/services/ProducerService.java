@@ -1,5 +1,6 @@
 package org.example.services;
 
+import org.example.modules.Film;
 import org.example.modules.MovieUser;
 import org.example.modules.Producer;
 import org.example.repositories.ProducerRepository;
@@ -21,6 +22,9 @@ public class ProducerService {
     }
     public Producer createProducer(Producer producer){
         return producerRepository.save(producer);
+    }
+    public void deleteProducer(Long id) {
+        producerRepository.deleteById(id);
     }
     public Producer getProducerById(long producerId) {
         return producerRepository.findById(producerId).orElseThrow(() -> new EntityNotFoundException("Producer not found with id: " + producerId));

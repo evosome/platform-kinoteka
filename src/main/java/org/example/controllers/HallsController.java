@@ -42,7 +42,6 @@ public class HallsController {
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = Halls.class)))
     })
-    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/hall/{cinemasId},{hallId}")
     public Halls createHalls(@PathVariable int cinemasId, @PathVariable int hallId, @RequestBody Halls hall){
         Cinemas cinemas = CinemasController.cinemasServices.getCinemasById(cinemasId);
@@ -61,5 +60,13 @@ public class HallsController {
     @GetMapping("/hall/{id}")
     public Halls getHallsById(@PathVariable Long id){
         return hallsService.getHallsById(id);
+    }
+    @DeleteMapping("/hall/{id")
+    public void deleteHall(@PathVariable Long id) {
+       Halls hall = hallsService.getHallsById(id);
+       Cinemas cinemas = hall.getCinemasFk();
+        cinemas.deleteHalls(hall);
+        hallsService.deleteHallsById(id);
+
     }
 }

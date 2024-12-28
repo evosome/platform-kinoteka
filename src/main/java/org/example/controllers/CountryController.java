@@ -1,6 +1,8 @@
 package org.example.controllers;
 
 import org.example.modules.Country;
+import org.example.modules.Film;
+import org.example.modules.Genre;
 import org.example.services.CountryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -44,7 +46,6 @@ public class CountryController {
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = Country.class)))
     })
-    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/countries")
     public Country createCountry(@RequestBody Country country) {
         return countryService.createCountry(country);
@@ -69,7 +70,6 @@ public class CountryController {
             @ApiResponse(responseCode = "400", description = "Bad Request - Invalid data"),
             @ApiResponse(responseCode = "500", description = "Internal Server Error")
     })
-    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/countries/{id}")
     public ResponseEntity<Country> updateCountry(@PathVariable Long id, @RequestBody Country countryDetails) {
         Country existingCountry = countryService.getCountryById(id);
@@ -85,5 +85,13 @@ public class CountryController {
         }
         Country updatedCountry = countryService.createCountry(existingCountry);
         return ResponseEntity.ok(updatedCountry);
+    }
+    @DeleteMapping("/countries/{id")
+    public void deleteCountry(@PathVariable Long id) {
+        Country country = countryService.getCountryById(id);
+        List<Film> films = country.getCountryMovies();
+        country.removeFilm(films);
+        countryService.deleteCountry(id);
+
     }
 }

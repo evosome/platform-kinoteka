@@ -30,7 +30,7 @@ public class SessionSpecification {
             if (hallId == null) {
                 return criteriaBuilder.conjunction();
             }
-            return criteriaBuilder.equal(root.get("hallsFk").get("sessionId"), hallId);
+            return criteriaBuilder.equal(root.get("hallsFk").get("hallsId"), hallId);
         };
     }
     public static Specification<Session> sortByDate() {

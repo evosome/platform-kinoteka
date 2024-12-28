@@ -43,7 +43,6 @@ public class TicketController {
             @ApiResponse(responseCode = "400", description = "Bad Request - User or Session not found"),
             @ApiResponse(responseCode = "500", description = "Internal Server Error")
     })
-    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/ticket/{sessionId},{userId}")
     public Ticket createTicket(@PathVariable long sessionId, @PathVariable long userId,@RequestBody Ticket ticket){
         MovieUser movieUser = MovieUserController.userService.getUserById(userId);
@@ -59,7 +58,6 @@ public class TicketController {
             @ApiResponse(responseCode = "404", description = "Ticket not found"),
             @ApiResponse(responseCode = "500", description = "Internal Server Error")
     })
-    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/ticket/{id}")
     public void deleteTicket(@PathVariable long id){
         MovieUser movieUser = MovieUserController.userService.getUserById(id);

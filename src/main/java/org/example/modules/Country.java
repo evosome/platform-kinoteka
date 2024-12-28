@@ -25,5 +25,10 @@ public class Country {
     @ManyToMany(cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Film> countryMovies = new ArrayList<>();
-
+    public void removeFilm(List<Film> films) {
+        for(Film film : films) {
+            List<Country> countries = film.getCountries();
+            countries.remove(this);
+        }
+    }
 }

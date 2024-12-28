@@ -25,7 +25,9 @@ public class GenreService {
     public Genre createGenre(Genre genre) {
         return genreRepository.save(genre);
     }
-
+    public void deleteGenre(Long id) {
+        genreRepository.deleteById(id);
+    }
     public Genre getGenreById(long genreId) {
         return genreRepository.findById(genreId).orElseThrow(() -> new EntityNotFoundException("Genre not found with id: " + genreId));
     }

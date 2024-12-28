@@ -31,4 +31,8 @@ public class Cinemas {
         halls.add(hall);
         hall.setCinemasFk(this);
     }
+    public void deleteHalls(Halls hall) {
+        halls.remove(hall);
+        hall.setCinemasFk(null);
+    }
 }

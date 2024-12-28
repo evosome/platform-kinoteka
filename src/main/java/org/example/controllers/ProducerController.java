@@ -1,6 +1,9 @@
 package org.example.controllers;
 
+import org.example.modules.Film;
+import org.example.modules.Halls;
 import org.example.modules.Producer;
+import org.example.modules.Session;
 import org.example.services.ProducerService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -43,7 +46,6 @@ public class ProducerController {
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = Producer.class)))
     })
-    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/producer")
     public Producer createProducer(@RequestBody Producer producer){
         producerService.createProducer(producer);
@@ -69,7 +71,6 @@ public class ProducerController {
             @ApiResponse(responseCode = "400", description = "Bad Request - Invalid data"),
             @ApiResponse(responseCode = "500", description = "Internal Server Error")
     })
-    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/producers/{id}")
     public ResponseEntity<Producer> updateProducer(@PathVariable Long id, @RequestBody Producer producerDetails) {
         Producer existingProducer = producerService.getProducerById(id);
@@ -89,5 +90,13 @@ public class ProducerController {
         Producer updatedProducer = producerService.createProducer(existingProducer);
 
         return ResponseEntity.ok(updatedProducer);
+    }
+    @DeleteMapping("/producers/{id")
+    public void deleteProducer(@PathVariable Long id) {
+       Producer producer = producerService.getProducerById(id);
+       List<Film> films = producer.getDirectorsMovies();
+       producer.removeFilm(films);
+       producerService.deleteProducer(id);
+
     }
 }

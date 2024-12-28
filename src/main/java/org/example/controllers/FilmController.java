@@ -52,7 +52,6 @@ public class FilmController {
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = Film.class)))
     })
-    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/film")
     public Film createFilm(@RequestBody Film film){
         film.addProducer(film);
@@ -81,7 +80,6 @@ public class FilmController {
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = Feedback.class)))
     })
-    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/film/{filmId}")
     public void deleteFilm(@PathVariable long filmId) {
         Film film = filmServices.getFilmById(filmId);
@@ -93,7 +91,6 @@ public class FilmController {
         film.removeCountry(countries);
         filmServices.deleteFilmById(filmId);
     }
-    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/film/{filmId}")
     public ResponseEntity<Film> updateFilm(@PathVariable long filmId, @RequestBody Film updatedFilm) {
         Film existingFilm = filmServices.getFilmById(filmId);

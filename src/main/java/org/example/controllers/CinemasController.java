@@ -52,7 +52,6 @@ public class CinemasController {
                                     array = @ArraySchema(schema = @Schema(implementation = Cinemas.class)))
                     })
     })
-    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/cinemas")
     public Cinemas createCinemas(@RequestBody Cinemas cinemas){
         cinemasServices.createCinemas(cinemas);

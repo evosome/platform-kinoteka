@@ -56,7 +56,6 @@ public class SessionController {
             @ApiResponse(responseCode = "400", description = "Bad Request - Hall or Film not found"),
             @ApiResponse(responseCode = "500", description = "Internal Server Error")
     })
-    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/session/{hallId},{filmId}")
     public Session createSession(@PathVariable int hallId, @PathVariable int filmId, @RequestBody Session session){
         Halls hall = HallsController.hallsService.getHallsById(hallId);
@@ -86,7 +85,6 @@ public class SessionController {
             @ApiResponse(responseCode = "400", description = "Bad Request - Invalid data"),
             @ApiResponse(responseCode = "500", description = "Internal Server Error")
     })
-    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/session/{id}")
     public ResponseEntity<Session> updateSession(@PathVariable Long id, @RequestBody Session sessionDetails) {
         Session existingSession = sessionService.getSessionById(id);
@@ -109,12 +107,13 @@ public class SessionController {
             @ApiResponse(responseCode = "204", description = "Session deleted successfully"),
             @ApiResponse(responseCode = "404", description = "Session not found")
     })
-    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/session/{id}")
     public void deleteSession(@PathVariable Long id) {
         Session session = sessionService.getSessionById(id);
-        session.setHallsFk(null);
-        session.setFilmFk(null);
+        Halls hall = session.getHallsFk();
+        hall.deleteSession(session);
+        Film film = session.getFilmFk();
+        film.deleteFilm(session);
         sessionService.deleteSession(id);
     }
 }

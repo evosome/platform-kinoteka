@@ -22,4 +22,10 @@ public class Producer {
     @JsonIgnore
     private List<Film> directorsMovies = new ArrayList<>();
 
+    public void removeFilm(List<Film> films) {
+        for(Film film : films) {
+            List<Producer> producers = film.getProducers();
+            producers.remove(this);
+        }
+    }
 }

@@ -71,6 +71,10 @@ public class Film {
       session.setFilmFk(this);
 
     }
+    public void deleteFilm(Session session){
+       sessions.remove(session);
+       session.setFilmFk(null);
+    }
     public void addFeedback(Feedback feedback) {
         feedbacks.add(feedback);
         feedback.setFilmFk(this);

@@ -32,4 +32,8 @@ public class Halls {
         sessions.add(session);
         session.setHallsFk(this);
     }
+    public void deleteSession(Session session){
+        sessions.remove(session);
+        session.setHallsFk(null);
+    }
 }
