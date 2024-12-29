@@ -1,9 +1,6 @@
 package org.example.services;
 
-import org.example.modules.MovieUser;
-import org.example.modules.Producer;
-import org.example.modules.Session;
-import org.example.modules.Ticket;
+import org.example.modules.*;
 import org.example.repositories.TicketRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -24,9 +21,13 @@ public class TicketServices {
     public Ticket createTicket(Long sessionId,Ticket ticket){
         Session session = SessionService.sessionRepository.findById(sessionId)
                 .orElseThrow(() -> new RuntimeException("Такого сеанса нет"));
-        for (Ticket tickets : session.getTickets()) {
-            if (tickets.getRow().equals(ticket.getRow()) && tickets.getPlace().equals(ticket.getPlace())) {
-                throw new RuntimeException("Место уже забронировано");
+        for (Seat seat : ticket.getSeats()) {
+            for (Ticket existingTicket : session.getTickets()) {
+                for (Seat existingSeat : existingTicket.getSeats()) {
+                    if (existingSeat.getRow().equals(seat.getRow()) && existingSeat.getPlace().equals(seat.getPlace())) {
+                        throw new RuntimeException("Место " + seat.getRow() + "-" + seat.getPlace() + " уже забронировано");
+                    }
+                }
             }
         }
         return ticketRepository.save(ticket);

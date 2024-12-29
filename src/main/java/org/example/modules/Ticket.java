@@ -4,6 +4,10 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 import jakarta.persistence.*;
+
+import java.util.ArrayList;
+import java.util.List;
+
 @Getter
 @Setter
 @Entity
@@ -12,12 +16,23 @@ public class  Ticket {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long ticketId;
+
     @ManyToOne
     @JsonIgnore
     private MovieUser ticketFk;
-    private Integer row;
-    private Integer place;
+
+    private Float price;
+
+    @OneToMany(mappedBy = "ticket", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Seat> seats = new ArrayList<>();
     @ManyToOne
     private Session ticket;
-    private Float price;
+    public void addSeat(Seat seat) {
+        seats.add(seat);
+        seat.setTicket(this);
+    }
+    public void removeSeat(Seat seat) {
+        seats.remove(seat);
+        seat.setTicket(null);
+    }
 }

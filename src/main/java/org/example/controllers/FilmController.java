@@ -86,15 +86,14 @@ public class FilmController {
         Film film = filmServices.getFilmById(filmId);
         List<Feedback> feedbacksToDelete = new ArrayList<>(film.getFeedbacks());
         for (Feedback feedback : feedbacksToDelete) {
-            feedbackService.deleteFeedbackById(feedback.getFeedbackId());
+            film.removeFeedback(feedback);
         }
         List<Session> sessionsToRemove = new ArrayList<>(film.getSessions());
         for (Session session : sessionsToRemove) {
-            SessionController.sessionService.deleteSession(session.getSessionId());
+            film.deleteSession(session);
         }
         for (PhotoLinks link : new ArrayList<>(film.getLinks())) {
             film.removeLinks(link);
-            //PhotoLinksController.photoLinksService.deleteLinkById(link.getId());
         }
         film.removeGenre(new ArrayList<>(film.getGenres()));
         film.removeProducer(new ArrayList<>(film.getProducers()));

@@ -21,7 +21,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api1/v1")
 public class TicketController {
-    private TicketServices ticketServices;
+    public static TicketServices ticketServices;
     public TicketController(TicketServices ticketServices){this.ticketServices = ticketServices;}
     @Operation(summary = "Gets all tickets", tags = "tickets")
     @ApiResponses(value = {
