@@ -55,7 +55,6 @@ public class MovieUserController {
                                     array = @ArraySchema(schema = @Schema(implementation = MovieUser.class)))
                     })
     })
-    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/movieUser")
     public ResponseEntity<String> createMovieUser(@RequestBody MovieUser movieUser){
         if(movieUser.getPassword().length()>=4&&movieUser.getPassword().length()<=12 && movieUser.getUsername().length()>=4&&movieUser.getUsername().length()<=12){
@@ -112,21 +111,13 @@ public class MovieUserController {
                     content = @Content)
     })
     @PutMapping("/movieUser/{id}")
-    public ResponseEntity<MovieUser> updateMovieUser(@PathVariable Long id, @RequestBody MovieUser updatedUser) {
-        if (updatedUser.getPassword().length() < 4 || updatedUser.getPassword().length() > 12 ||
-                updatedUser.getUsername().length() < 4 || updatedUser.getUsername().length() > 12) {
-            return ResponseEntity.badRequest().body(null);
-        }
+    public void updateMovieUser(@PathVariable Long id, @RequestBody MovieUser updatedUser) {
         MovieUser existingUser = userService.getUserById(id);
         existingUser.setName(updatedUser.getName());
         existingUser.setSurName(updatedUser.getSurName());
         existingUser.setEmail(updatedUser.getEmail());
-        existingUser.setUsername(updatedUser.getUsername());
         existingUser.setTelephoneNumber(updatedUser.getTelephoneNumber());
-        existingUser.setPassword(updatedUser.getPassword());
-        existingUser.setRoles(updatedUser.getRoles());
-        userService.createUser(existingUser);
-        return ResponseEntity.ok(existingUser);
+        userService.updateUser(existingUser);
     }
     @PreAuthorize("isFullyAuthenticated()")
     @GetMapping("/movieUser/me")

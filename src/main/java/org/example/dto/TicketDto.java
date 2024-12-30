@@ -9,11 +9,6 @@ import org.example.modules.Session;
 @Getter
 @Setter
 public class TicketDto {
-    private long sessionId;
-    private MovieUser sessionFk;
-    private Integer row;
-    private Integer place;
-    private Film film;
+    private long ticketId;
     private Float price;
-    private Session ticket;
 }

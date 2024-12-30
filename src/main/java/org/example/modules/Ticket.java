@@ -1,6 +1,8 @@
 package org.example.modules;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.Setter;
 import jakarta.persistence.*;
@@ -23,9 +25,10 @@ public class  Ticket {
 
     private Float price;
 
-    @OneToMany(mappedBy = "ticket", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(fetch = FetchType.EAGER,mappedBy = "ticket", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Seat> seats = new ArrayList<>();
     @ManyToOne
+    @JsonBackReference
     private Session ticket;
     public void addSeat(Seat seat) {
         seats.add(seat);

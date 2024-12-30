@@ -1,9 +1,8 @@
 package org.example.services;
 
-import org.example.modules.Cinemas;
-import org.example.modules.Film;
-import org.example.modules.Producer;
+import org.example.modules.*;
 import org.example.repositories.FilmRepository;
+import org.example.repositories.PhotoLinksRepository;
 import org.example.specification.FilmSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

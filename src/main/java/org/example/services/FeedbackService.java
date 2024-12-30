@@ -3,6 +3,7 @@ package org.example.services;
 import lombok.AllArgsConstructor;
 import org.example.modules.Cinemas;
 import org.example.modules.Feedback;
+import org.example.repositories.CountryRepository;
 import org.example.repositories.FeedbackRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -15,10 +16,14 @@ import java.util.List;
 @AllArgsConstructor
 public class FeedbackService {
 
-    private final FeedbackRepository feedbackRepository;
+    public static FeedbackRepository feedbackRepository;
 
     private final FilmServices filmServices;
-
+    @Autowired
+    public FeedbackService(FeedbackRepository feedbackRepository, FilmServices filmServices) {
+        this.feedbackRepository = feedbackRepository;
+        this.filmServices = filmServices;
+    }
     public Page<Feedback> getAllFeedback(int page, int size) {
         return feedbackRepository.findAll(PageRequest.of(page, size));
     }

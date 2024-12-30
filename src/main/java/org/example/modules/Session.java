@@ -1,6 +1,8 @@
 package org.example.modules;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -21,10 +23,10 @@ public class Session {
     private String cinemaType;
     @Column(columnDefinition = "Integer default 0")
     private int price;
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     private Halls hallsFk;
-    @OneToMany(mappedBy = "ticket",cascade = CascadeType.ALL,orphanRemoval = true)
-    @JsonIgnore
+    @OneToMany(fetch = FetchType.EAGER,mappedBy = "ticket",cascade = CascadeType.ALL,orphanRemoval = true)
+    @JsonManagedReference
     private List<Ticket> tickets = new ArrayList<>();
     @ManyToOne
     private Film filmFromSession;

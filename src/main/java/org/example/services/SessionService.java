@@ -1,5 +1,6 @@
 package org.example.services;
 
+import org.example.modules.Seat;
 import org.example.modules.Session;
 import org.example.modules.Ticket;
 import org.example.repositories.SessionRepository;
@@ -10,19 +11,16 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import jakarta.persistence.*;
 import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class SessionService {
     public static SessionRepository sessionRepository;
     public SessionService(SessionRepository sessionRepository) {
-        SessionService.sessionRepository = sessionRepository;
+        this.sessionRepository = sessionRepository;
     }
     public List<Session> getAllSession(String date, String cinemaType, Long hallId, Sort sort) {
         return sessionRepository.findAll(SessionSpecification.combineFilters(date, cinemaType, hallId), sort);
-    }
-    public List<Ticket> getOccupiedSeats(long sessionId) {
-        Session session = sessionRepository.findById(sessionId)
-                .orElseThrow(() -> new RuntimeException("Session not found"));
-        return session.getTickets();
     }
     public Session createSession(Session session){
         return sessionRepository.save(session);

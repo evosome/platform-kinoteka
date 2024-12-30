@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.example.services.PhotoLinksService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -84,16 +85,12 @@ public class FilmController {
     @DeleteMapping("/film/{filmId}")
     public void deleteFilm(@PathVariable long filmId) {
         Film film = filmServices.getFilmById(filmId);
-        List<Feedback> feedbacksToDelete = new ArrayList<>(film.getFeedbacks());
-        for (Feedback feedback : feedbacksToDelete) {
-            film.removeFeedback(feedback);
-        }
-        List<Session> sessionsToRemove = new ArrayList<>(film.getSessions());
-        for (Session session : sessionsToRemove) {
-            film.deleteSession(session);
-        }
-        for (PhotoLinks link : new ArrayList<>(film.getLinks())) {
-            film.removeLinks(link);
+        List<Session> sessions = film.getSessions();
+        for(Session session : sessions){
+            Halls hall1 = session.getHallsFk();
+            if(hall1 != null){
+                hall1.deleteSession(session);
+            }
         }
         film.removeGenre(new ArrayList<>(film.getGenres()));
         film.removeProducer(new ArrayList<>(film.getProducers()));

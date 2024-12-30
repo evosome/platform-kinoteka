@@ -32,7 +32,9 @@ public class MovieUserServices {
     public Page<MovieUser> getAllUser(int page, int size){
         return movieUserRepository.findAll(PageRequest.of(page, size));
     }
-
+    public void updateUser(MovieUser user) {
+        movieUserRepository.save(user);
+    }
     public void createUser(MovieUser movieUser) {
         MovieUser userFromDB = movieUserRepository.findByUsername(movieUser.getUsername());
 

@@ -3,6 +3,7 @@ package org.example.controllers;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.example.dto.TicketDto;
 import org.example.modules.MovieUser;
+import org.example.modules.Seat;
 import org.example.modules.Session;
 import org.example.modules.Ticket;
 import org.example.services.TicketServices;
@@ -13,6 +14,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.data.domain.Page;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,10 +32,8 @@ public class TicketController {
                             array = @ArraySchema(schema = @Schema(implementation = Ticket.class))))
     })
     @GetMapping("/ticket")
-    public Page<Ticket> getTickets(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
-        return ticketServices.getAllTicket(page, size);
+    public List<Ticket> getTickets() {
+        return ticketServices.getAllTicket();
     }
     @Operation(summary = "Create new ticket", tags = "tickets")
     @ApiResponses(value = {
@@ -78,7 +78,10 @@ public class TicketController {
     })
     @GetMapping("/ticket/{id}")
     public Ticket getTicketById(@PathVariable long id){
-        Ticket ticket = ticketServices.getTicketById(id);
-        return ticket;
+        return ticketServices.getTicketById(id);
+    }
+    @GetMapping("/hall/{hallId}/session/{sessionId}/occupied-seats")
+    public List<Seat> getOccupiedSeats(@PathVariable Long hallId, @PathVariable Long sessionId) {
+        return ticketServices.getOccupiedSeats(sessionId);
     }
 }

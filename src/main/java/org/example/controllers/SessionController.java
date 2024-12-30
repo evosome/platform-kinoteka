@@ -86,12 +86,8 @@ public class SessionController {
             @ApiResponse(responseCode = "500", description = "Internal Server Error")
     })
     @PutMapping("/session/{id}")
-    public ResponseEntity<Session> updateSession(@PathVariable Long id, @RequestBody Session sessionDetails) {
+    public void updateSession(@PathVariable Long id, @RequestBody Session sessionDetails) {
         Session existingSession = sessionService.getSessionById(id);
-
-        if (existingSession == null) {
-            return ResponseEntity.notFound().build();
-        }
         existingSession.setDate(sessionDetails.getDate());
         existingSession.setCinemaType(sessionDetails.getCinemaType());
         existingSession.setHallsFk(sessionDetails.getHallsFk());
@@ -99,8 +95,6 @@ public class SessionController {
         existingSession.setPrice(sessionDetails.getPrice());
 
         Session updatedSession = sessionService.createSession(existingSession);
-
-        return ResponseEntity.ok(updatedSession);
     }
     @Operation(summary = "Delete session by id", tags = "sessions")
     @ApiResponses(value = {
@@ -113,12 +107,9 @@ public class SessionController {
         Halls hall = session.getHallsFk();
         hall.deleteSession(session);
         Film film = session.getFilmFromSession();
-        film.deleteSession(session);
+        if(film!=null){
+            film.deleteSession(session);
+        }
         sessionService.deleteSession(id);
-    }
-    @GetMapping("/hall/{hallId}/session/{sessionId}/occupied-seats")
-    public ResponseEntity<List<Ticket>> getOccupiedSeats(@PathVariable Long hallId, @PathVariable Long sessionId) {
-        List<Ticket> occupiedSeats = sessionService.getOccupiedSeats(sessionId);
-        return ResponseEntity.ok(occupiedSeats);
     }
 }

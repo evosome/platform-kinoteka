@@ -10,7 +10,7 @@ import jakarta.persistence.*;
 import java.util.List;
 @Service
 public class PhotoLinksService {
-    public PhotoLinksRepository photoLinksRepository;
+    public static PhotoLinksRepository photoLinksRepository;
     @Autowired
     public PhotoLinksService(PhotoLinksRepository photoLinksRepository) {
         this.photoLinksRepository = photoLinksRepository;

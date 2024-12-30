@@ -1,5 +1,6 @@
 package org.example.services;
 
+import org.example.controllers.SessionController;
 import org.example.modules.*;
 import org.example.repositories.TicketRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,14 +10,15 @@ import org.springframework.stereotype.Service;
 
 import jakarta.persistence.*;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class TicketServices {
     private TicketRepository ticketRepository;
     @Autowired
     public TicketServices(TicketRepository ticketRepository){this.ticketRepository = ticketRepository;}
-    public Page<Ticket> getAllTicket(int page, int size){
-        return ticketRepository.findAll(PageRequest.of(page, size));
+    public List<Ticket> getAllTicket(){
+        return ticketRepository.findAll();
     }
     public Ticket createTicket(Long sessionId,Ticket ticket){
         Session session = SessionService.sessionRepository.findById(sessionId)
@@ -37,5 +39,12 @@ public class TicketServices {
     }
     public Ticket getTicketById(long cinemaSessionId) {
         return ticketRepository.findById(cinemaSessionId).orElseThrow(() -> new EntityNotFoundException("cinemaSession not found with id: " + cinemaSessionId));
+    }
+    public List<Seat> getOccupiedSeats(long sessionId) {
+        Session session = SessionController.sessionService.getSessionById(sessionId);
+        List<Ticket> tickets = session.getTickets();
+        return tickets.stream()
+                .flatMap(ticket -> ticket.getSeats().stream())
+                .collect(Collectors.toList());
     }
 }
