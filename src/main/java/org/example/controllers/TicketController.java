@@ -1,11 +1,9 @@
 package org.example.controllers;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.example.dto.SeatsDto;
 import org.example.dto.TicketDto;
-import org.example.modules.MovieUser;
-import org.example.modules.Seat;
-import org.example.modules.Session;
-import org.example.modules.Ticket;
+import org.example.modules.*;
 import org.example.services.TicketServices;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -18,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 @Tag(name = "Ticket", description = "The Ticket API")
 @RestController
@@ -32,8 +31,14 @@ public class TicketController {
                             array = @ArraySchema(schema = @Schema(implementation = Ticket.class))))
     })
     @GetMapping("/ticket")
-    public List<Ticket> getTickets() {
-        return ticketServices.getAllTicket();
+    public List<TicketDto> getTickets() {
+        List<Ticket> tickets = ticketServices.getAllTicket();
+        List<TicketDto> ticketDtos = new ArrayList<>();
+        for (Ticket ticket : tickets) {
+            TicketDto ticketDto = convertTicket(ticket);
+            ticketDtos.add(ticketDto);
+        }
+        return ticketDtos;
     }
     @Operation(summary = "Create new ticket", tags = "tickets")
     @ApiResponses(value = {
@@ -77,11 +82,40 @@ public class TicketController {
             @ApiResponse(responseCode = "404", description = "Ticket not found")
     })
     @GetMapping("/ticket/{id}")
-    public Ticket getTicketById(@PathVariable long id){
-        return ticketServices.getTicketById(id);
+    public TicketDto getTicketById(@PathVariable long id){
+        return convertTicket(ticketServices.getTicketById(id));
     }
     @GetMapping("/hall/{hallId}/session/{sessionId}/occupied-seats")
     public List<Seat> getOccupiedSeats(@PathVariable Long hallId, @PathVariable Long sessionId) {
         return ticketServices.getOccupiedSeats(sessionId);
+    }
+    public static TicketDto convertTicket(Ticket ticket){
+
+        TicketDto dto = new TicketDto();
+        dto.setTicketId(ticket.getTicketId());
+        Film film = ticket.getTicket().getFilmFromSession();
+        if (film != null) {
+            String title = film.getTitle();
+            dto.setFilmTitle(title != null ? title : "Unknown");
+            dto.setCoverFilm(film.getCover());
+            dto.setFilmId(film.getFilmId());
+        } else {
+            dto.setFilmTitle("Unknown");
+        }
+        dto.setPrice(ticket.getPrice());
+        dto.setMovieUser(ticket.getTicketFk());
+        List<SeatsDto> seats = new ArrayList<>();
+        for(Seat seat:ticket.getSeats()){
+            SeatsDto seatDto = convertSeat(seat);
+            seats.add(seatDto);
+        }
+        return dto;
+    }
+    public static SeatsDto convertSeat(Seat seat){
+        SeatsDto dto = new SeatsDto();
+        dto.setSeatId(seat.getSeatId());
+        dto.setPlace(seat.getPlace());
+        dto.setRow(seat.getRow());
+        return dto;
     }
 }

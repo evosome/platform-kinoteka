@@ -1,5 +1,6 @@
 package org.example.controllers;
-
+import org.example.services.MinioService;
+import org.springframework.web.multipart.MultipartFile;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -17,12 +18,14 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @Tag(name = "User", description = "The User API")
 @RestController
 @RequestMapping("/api1/v1")
 public class MovieUserController {
     public static MovieUserServices userService;
+    public static MinioService minioService;
     @Autowired
     public MovieUserController(MovieUserServices userService){
         MovieUserController.userService = userService;
@@ -126,4 +129,32 @@ public class MovieUserController {
     ) {
         return userService.getCurrentAuthenticatedUser();
     }
+    @Operation(summary = "Upload user avatar", tags = "user")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Avatar uploaded successfully"),
+            @ApiResponse(responseCode = "400", description = "Invalid file format"),
+            @ApiResponse(responseCode = "404", description = "User not found"),
+            @ApiResponse(responseCode = "500", description = "Internal Server Error")
+    })
+    @PostMapping("/movieUser/{id}/avatar")
+    public ResponseEntity<String> uploadAvatar(@PathVariable long id, @RequestParam("file") MultipartFile file) {
+        MovieUser movieUser = userService.getUserById(id);
+        if (movieUser == null) {
+            return ResponseEntity.notFound().build();
+        }
+        String fileName = movieUser.getUsername() + "-" + UUID.randomUUID() + "." + getFileExtension(file.getOriginalFilename());
+        try {
+            String avatarLink = minioService.uploadFile(file.getInputStream(), fileName);
+            movieUser.setUserImage(avatarLink);
+            userService.updateUser(movieUser);
+
+            return ResponseEntity.ok("Аватар обновлен успешно: " + avatarLink);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Ошибка в обновлении аватара: " + e.getMessage());
+        }
+    }
+    private String getFileExtension(String filename) {
+        return filename.substring(filename.lastIndexOf('.') + 1);
+    }
+
 }

@@ -1,6 +1,8 @@
 package org.example.services;
 
 import org.example.controllers.SessionController;
+import org.example.controllers.TicketController;
+import org.example.dto.TicketDto;
 import org.example.modules.*;
 import org.example.repositories.TicketRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +11,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import jakarta.persistence.*;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -43,7 +47,11 @@ public class TicketServices {
     public List<Seat> getOccupiedSeats(long sessionId) {
         Session session = SessionController.sessionService.getSessionById(sessionId);
         List<Ticket> tickets = session.getTickets();
-        return tickets.stream()
+        List<TicketDto> dto = new ArrayList<>();
+        for(Ticket ticket : tickets){
+            dto.add(TicketController.convertTicket(ticket));
+        }
+        return dto.stream()
                 .flatMap(ticket -> ticket.getSeats().stream())
                 .collect(Collectors.toList());
     }

@@ -29,7 +29,7 @@ public class FeedbackController {
 
     private final FilmServices filmServices;
 
-    public static FeedbackService feedbackServices;
+    private final FeedbackService feedbackServices;
 
     @Operation(summary = "Gets all feedback", tags = "feedback")
     @ApiResponses(value = {
